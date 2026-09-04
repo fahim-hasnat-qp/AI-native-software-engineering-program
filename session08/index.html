@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAG, Hands-On</title>
+  <style>
+  /* ============================================================
+     Fonts
+     ============================================================ */
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
+
+  /* ============================================================
+     base.css  — colors, reset, layout, typography
+     ============================================================ */
+  :root {
+    --wu-color-gray-lead: oklch(47.8% 0.0244 255);
+    --wu-color-gray-subtle: oklch(68.9% 0 0);
+    --wu-color-gray-switcher: oklch(37.1% 0 0);
+    --wu-color-gray-notification: oklch(45% 0 0);
+    --wu-color-gray-footer: oklch(71.5% 0 0);
+    --wu-color-gray-40: oklch(88.2% 0 0);
+    --wu-color-gray-25: oklch(93.1% 0 0);
+    --wu-color-gray-20: oklch(0% 0 0 / 6%);
+    --wu-color-gray-10: oklch(97% 0 0);
+    --wu-color-blue-p: oklch(61.6% 0.1696 251.2);
+    --wu-color-blue-p-hover: oklch(70.2% 0.1314 247.4);
+    --wu-color-blue-p-hover-deep: oklch(49.5% 0.1695 256.4);
+    --wu-color-blue-q: oklch(35.4% 0.1335 266.3);
+    --wu-color-blue-deep: oklch(45.1% 0.1159 254.5);
+    --wu-color-blue-soft: oklch(93.4% 0.0426 224.9);
+    --wu-color-blue-focus: oklch(79.7% 0.0876 245.5);
+    --wu-color-blue-sidebar: oklch(96.3% 0.012 259.8);
+    --wu-color-blue-sidebar-hover: oklch(91.7% 0.0192 263);
+    --wu-color-blue-switcher: oklch(22% 0.083 258.4);
+    --wu-color-orange-deep: oklch(72.3% 0.1755 56.7);
+    --wu-color-orange-soft: oklch(77.7% 0.1654 73.2);
+    --wu-color-yellow-deep: oklch(54.7% 0.1213 66.6);
+    --wu-color-yellow-soft: oklch(95% 0.0781 95.7);
+    --wu-color-red-deep: oklch(53.1% 0.2178 29.2);
+    --wu-color-red-soft: oklch(85.3% 0.0802 18.9);
+    --wu-color-maroon: oklch(45.3% 0.186 29.2);
+    --wu-color-maroon-hover: oklch(88.5% 0.0593 18.3);
+    --wu-color-green-deep: oklch(49.9% 0.1603 139.9);
+    --wu-color-green-soft: oklch(93.4% 0.0698 124.3);
+
+    --slide-bg: #fff;
+    --slide-text: var(--wu-color-gray-lead);
+    --slide-text-subtle: var(--wu-color-gray-subtle);
+    --slide-accent: var(--wu-color-blue-p);
+    --slide-accent-deep: var(--wu-color-blue-deep);
+    --slide-border: var(--wu-color-gray-40);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Fira Sans', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--slide-text);
+    background: var(--slide-bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .slides { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  h1 { font-size: 3rem;    font-weight: 700; line-height: 1.15; }
+  h2 { font-size: 2.25rem; font-weight: 600; line-height: 1.2;  }
+  h3 { font-size: 1.75rem; font-weight: 600; line-height: 1.25; }
+  h4 { font-size: 1.25rem; font-weight: 500; }
+  p  { font-size: 1.125rem; font-weight: 400; color: var(--slide-text-subtle); }
+
+  strong { font-weight: 600; }
+  em     { font-style: italic; }
+
+  .label {
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--slide-text-subtle);
+  }
+
+  .text-accent { color: var(--slide-accent); }
+  .text-muted  { color: var(--slide-text-subtle); }
+  .text-center { text-align: center; }
+
+  .slide-nav {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    display: flex; gap: 0.5rem; z-index: 100;
+  }
+  .slide-nav button {
+    font-family: inherit; font-size: 0.875rem; padding: 0.4rem 0.9rem;
+    border: 1px solid var(--slide-border); border-radius: 6px;
+    background: #fff; color: var(--slide-text); cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .slide-nav button:hover { background: var(--wu-color-gray-10); }
+  .slide-nav button:active { transform: scale(0.92); }
+
+  .slide-counter {
+    position: fixed; bottom: 1.75rem; left: 50%; transform: translateX(-50%);
+    font-size: 0.8rem; color: var(--slide-text-subtle);
+  }
+
+  /* ============================================================
+     session_01.css — slide styling
+     ============================================================ */
+  :root {
+    --bg:      #ffffff;
+    --fg:      #0f0f0f;
+    --fg-sub:  #2e2e2e;
+    --fg-muted:#666666;
+    --border:  #e0e0e0;
+    --surface: #f4f4f6;
+    --accent:  var(--wu-color-blue-p);
+  }
+
+  body { background: var(--bg); color: var(--fg); }
+
+  .slide { background: var(--bg); padding: 4.5rem 7rem; align-items: flex-start; justify-content: center; }
+  .slide.center { align-items: center; text-align: center; }
+
+  h1 { font-size: 5.25rem; font-weight: 700; color: var(--fg); line-height: 1.06; letter-spacing: -0.025em; }
+  h2 { font-size: 3.75rem; font-weight: 600; color: var(--fg); line-height: 1.1;  letter-spacing: -0.015em; }
+  p  { font-size: 1.45rem; color: var(--fg-sub); line-height: 1.65; }
+
+  .kicker {
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .accent { color: var(--accent); }
+
+  .slide.title-slide { border-left: 6px solid var(--accent); }
+
+  .slide.divider { background: var(--accent); }
+  .slide.divider h2 { color: #fff; font-size: 3.75rem; }
+  .slide.divider .sub { font-size: 1.35rem; color: oklch(100% 0 0 / 65%); margin-top: 0.75rem; }
+
+  .phase-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; width: 100%; margin-top: 2rem; }
+  .phase-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; background: var(--surface); }
+  .phase-card .num { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.3rem; }
+  .phase-card .name { font-size: 1rem; font-weight: 500; color: var(--fg-sub); line-height: 1.3; }
+  .phase-card.active { border-color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 8%); }
+  .phase-card.active .num  { color: var(--accent); }
+  .phase-card.active .name { color: var(--fg); font-weight: 700; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 680px; margin: 0 auto; }
+  .flow-input { padding: 0.7rem 2.5rem; border: 3px solid var(--fg); border-radius: 12px; font-size: 1.5rem; font-weight: 700; color: var(--fg); }
+  .flow-arrow { width: 2px; height: 24px; background: var(--border); position: relative; }
+  .flow-arrow::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--border); }
+  .flow-row { display: flex; align-items: center; gap: 1.25rem; width: 100%; padding: 0.5rem 0; }
+  .flow-label { font-size: 1rem; font-weight: 700; color: var(--fg); width: 75px; flex-shrink: 0; }
+  .flow-dash { flex: 1; border-top: 2px dashed var(--border); }
+  .flow-chips { display: flex; gap: 0.65rem; }
+
+  .chip { padding: 0.45rem 1.1rem; border-radius: 8px; font-size: 1.1rem; font-weight: 700; background: transparent; }
+  .chip-blue  { border: 2.5px solid oklch(61.6% 0.1696 251.2); color: oklch(33% 0.13 254); }
+  .chip-green { border: 2.5px solid oklch(49.9% 0.1603 139.9); color: oklch(31% 0.12 140); }
+  .chip-red   { border: 2.5px solid oklch(53.1% 0.2178 29.2);  color: oklch(36% 0.19 29);  }
+  .chip-orange{ border: 2.5px solid oklch(65%   0.16   50);    color: oklch(38% 0.15 50);  }
+
+  .thinking { font-size: 1.15rem; font-style: italic; color: var(--fg-muted); }
+
+  .token-compare { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2.25rem; }
+  .token-line    { display: flex; align-items: center; gap: 1.25rem; }
+  .token-count   { font-size: 1rem; font-weight: 700; color: var(--fg-muted); width: 90px; flex-shrink: 0; }
+
+  .prob-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 2.25rem; width: 100%; max-width: 600px; }
+  .prob-row { display: flex; align-items: center; gap: 1.1rem; }
+  .prob-label { font-size: 1.05rem; font-weight: 700; width: 110px; flex-shrink: 0; color: var(--fg); font-family: monospace; }
+  .prob-bar-wrap { flex: 1; height: 28px; background: var(--surface); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+  .prob-bar { height: 100%; background: oklch(61.6% 0.1696 251.2 / 25%); border-right: 2px solid var(--accent); display: flex; align-items: center; padding-left: 0.6rem; font-size: 0.82rem; font-weight: 700; color: var(--accent); }
+  .prob-bar.top { background: oklch(61.6% 0.1696 251.2 / 45%); }
+
+  .train-steps { display: flex; align-items: center; margin-top: 2.5rem; flex-wrap: wrap; }
+  .train-step { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+  .train-box { padding: 0.6rem 1.25rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-weight: 600; color: var(--fg-sub); background: var(--surface); white-space: nowrap; }
+  .train-box.accent-box { border-color: var(--accent); color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 6%); }
+  .train-arrow { font-size: 1.4rem; color: var(--border); padding: 0 0.4rem; line-height: 1; align-self: center; }
+
+  .rlhf-steps { display: flex; flex-direction: column; margin-top: 2rem; width: 100%; max-width: 620px; }
+  .rlhf-row { display: flex; align-items: flex-start; gap: 1.25rem; padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .rlhf-row:first-child { border-radius: 12px 12px 0 0; }
+  .rlhf-row:last-child  { border-bottom: none; border-radius: 0 0 12px 12px; }
+  .rlhf-num   { font-size: 0.72rem; font-weight: 700; color: var(--accent); width: 24px; flex-shrink: 0; padding-top: 0.15rem; }
+  .rlhf-title { font-size: 1rem;    font-weight: 700; color: var(--fg); }
+  .rlhf-desc  { font-size: 0.92rem; color: var(--fg-muted); margin-top: 0.2rem; }
+
+  .terminal { background: #0e0e0e; border-radius: 12px; padding: 1.5rem 2rem; margin-top: 2.5rem; width: 100%; max-width: 640px; font-family: 'Fira Sans', monospace; }
+  .terminal-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal-dot:nth-child(1) { background: #ff5f57; }
+  .terminal-dot:nth-child(2) { background: #febc2e; }
+  .terminal-dot:nth-child(3) { background: #28c840; }
+  .terminal-line   { font-size: 1.1rem; line-height: 1.8; color: #ccc; }
+  .terminal-prompt { color: #528bff; }
+  .terminal-cmd    { color: #efefef; }
+  .terminal-cursor { display: inline-block; width: 2px; height: 1.2em; background: #528bff; animation: blink 1s step-end infinite; vertical-align: text-bottom; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .param-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 2rem; width: 100%; max-width: 620px; }
+  .param-cell { padding: 0.4rem 0.5rem; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); font-size: 0.8rem; font-family: monospace; color: var(--fg-muted); text-align: center; }
+  .param-cell.hot { border-color: var(--accent); color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 8%); }
+
+  .tool-loop { display: flex; flex-direction: column; margin-top: 2rem; width: 100%; max-width: 580px; }
+  .loop-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .loop-row:first-child { border-radius: 12px 12px 0 0; }
+  .loop-row:last-child  { border-bottom: none; border-radius: 0 0 12px 12px; }
+  .loop-icon  { font-size: 1.2rem; width: 28px; flex-shrink: 0; text-align: center; }
+  .loop-text  { font-size: 1rem; color: var(--fg-sub); }
+  .loop-text strong { color: var(--fg); font-weight: 700; }
+  .loop-badge { margin-left: auto; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; padding: 0.15rem 0.5rem; }
+
+  .thinking-block { width: 100%; max-width: 620px; margin-top: 2rem; }
+  .thinking-inner { border: 1.5px dashed var(--border); border-radius: 10px; padding: 1rem 1.5rem; background: var(--surface); margin-bottom: 1rem; }
+  .thinking-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.5rem; }
+  .thinking-text { font-size: 0.95rem; color: var(--fg-muted); font-style: italic; line-height: 1.5; }
+  .answer-inner { border: 1.5px solid var(--accent); border-radius: 10px; padding: 1rem 1.5rem; background: oklch(61.6% 0.1696 251.2 / 5%); }
+  .answer-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .answer-text { font-size: 1rem; color: var(--fg-sub); line-height: 1.5; }
+
+  .attn-demo { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2.25rem; width: 100%; max-width: 640px; }
+  .attn-sentence { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .attn-word { padding: 0.4rem 0.85rem; border-radius: 7px; font-size: 1.1rem; font-weight: 600; border: 2px solid var(--border); color: var(--fg-sub); background: var(--surface); }
+  .attn-word.focus  { border-color: var(--accent); color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 8%); }
+  .attn-word.strong { border-color: oklch(49.9% 0.1603 139.9); color: oklch(31% 0.12 140); background: oklch(49.9% 0.1603 139.9 / 8%); }
+  .attn-label { font-size: 0.8rem; color: var(--fg-muted); margin-left: 0.5rem; }
+
+  .ctx-bar { width: 100%; max-width: 600px; height: 52px; border-radius: 10px; border: 2px solid var(--border); display: flex; overflow: hidden; margin: 2rem auto 0; }
+  .ctx-used { width: 70%; background: oklch(61.6% 0.1696 251.2 / 15%); border-right: 2px dashed var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: var(--accent); letter-spacing: 0.06em; }
+  .ctx-free { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--fg-muted); letter-spacing: 0.05em; }
+
+  .harness-box { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-top: 2rem; width: 100%; max-width: 680px; }
+  .layer { display: flex; align-items: flex-start; gap: 1.5rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .layer:last-child { border-bottom: none; }
+  .layer-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); width: 140px; flex-shrink: 0; padding-top: 0.15rem; }
+  .layer-desc { font-size: 1.05rem; color: var(--fg-sub); line-height: 1.55; }
+
+  .tools-row { display: flex; gap: 1.1rem; margin-top: 2.25rem; flex-wrap: wrap; }
+  .tool-chip { padding: 0.65rem 1.5rem; border-radius: 10px; border: 1.5px solid var(--border); font-size: 1.1rem; font-weight: 500; color: var(--fg-sub); background: var(--surface); }
+  .tool-chip.highlight { border-color: var(--accent); color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 6%); font-weight: 700; }
+
+  .agenda { list-style: none; margin-top: 2.5rem; display: flex; flex-direction: column; width: 100%; }
+  .agenda li { display: flex; align-items: flex-start; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+  .agenda li:last-child { border-bottom: none; }
+  .ag-time  { font-size: 0.9rem;  font-weight: 700; color: var(--accent); width: 60px; flex-shrink: 0; padding-top: 0.2rem; }
+  .ag-title { font-size: 1.2rem;  font-weight: 700; color: var(--fg); }
+  .ag-desc  { font-size: 1rem;    color: var(--fg-muted); margin-top: 0.2rem; }
+
+  .workflow-list { list-style: none; margin-top: 2.25rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .workflow-list li { display: flex; align-items: baseline; gap: 1.25rem; }
+  .wl-tool { font-size: 1.1rem; font-weight: 700; color: var(--accent); width: 190px; flex-shrink: 0; }
+  .wl-desc { font-size: 1.1rem; color: var(--fg-sub); }
+
+  /* Two-host stack comparison */
+  .stacks { display: flex; gap: 3.5rem; width: 100%; margin-top: 1.75rem; }
+  .stack { flex: 1; min-width: 0; }
+  .stack-head { display: flex; align-items: baseline; gap: 0.7rem; margin-bottom: 1.1rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--border); }
+  .stack-who { font-size: 1.5rem; font-weight: 700; color: var(--fg); }
+  .stack-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .stack ul { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+  .stack .t { font-size: 1.05rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
+  .stack .d { font-size: 0.92rem; color: var(--fg-sub); line-height: 1.4; margin-top: 0.15rem; }
+  .sec { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.45rem; border-radius: 4px; border: 1px solid var(--border); color: var(--fg-muted); background: var(--surface); }
+  .sec-pri { color: var(--accent); border-color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 8%); }
+
+  .speakers-row { display: flex; gap: 5rem; margin-top: 3.5rem; align-items: flex-start; }
+  .speaker { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .speaker img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; object-position: center top; border: 3px solid var(--border); box-shadow: 0 6px 32px oklch(0% 0 0 / 10%); }
+  .speaker-name { font-size: 1.15rem; font-weight: 700; color: var(--fg); }
+  .speaker-role { font-size: 0.9rem;  color: var(--fg-muted); margin-top: -0.4rem; }
+
+  .slide-nav button { background: var(--surface); color: var(--fg-muted); border-color: var(--border); font-size: 1.1rem; }
+  .slide-nav button:hover { color: var(--fg); }
+  .slide-counter { color: var(--fg-muted); font-size: 0.85rem; }
+
+  /* ============================================================
+     Animations — entrance reveals retrigger on .active
+     ============================================================ */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes riseIn   { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    @keyframes popIn    { from { opacity: 0; transform: scale(0.86); }      to { opacity: 1; transform: none; } }
+    @keyframes slideInL { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+    @keyframes growBar  { from { transform: scaleX(0); }                    to { transform: scaleX(1); } }
+
+    /* Headlines & body copy */
+    .slide.active .kicker     { animation: riseIn 0.5s ease both; }
+    .slide.active h1          { animation: riseIn 0.6s cubic-bezier(.2,.7,.2,1) 0.05s both; }
+    .slide.active h2          { animation: riseIn 0.6s cubic-bezier(.2,.7,.2,1) 0.05s both; }
+    .slide.active > p,
+    .slide.active .flow,
+    .slide.active .terminal,
+    .slide.active .ctx-bar    { animation: riseIn 0.6s ease 0.15s both; }
+    .slide.active > p ~ p     { animation-delay: 0.28s; }
+
+    /* Divider slides */
+    .slide.divider.active h2  { animation: popIn 0.55s cubic-bezier(.2,.8,.2,1) both; }
+    .slide.divider.active .sub{ animation: riseIn 0.5s ease 0.2s both; }
+
+    /* Staggered groups */
+    .slide.active .phase-card { animation: popIn 0.5s ease both; }
+    .slide.active .phase-card:nth-child(1){animation-delay:.10s} .slide.active .phase-card:nth-child(2){animation-delay:.16s}
+    .slide.active .phase-card:nth-child(3){animation-delay:.22s} .slide.active .phase-card:nth-child(4){animation-delay:.28s}
+    .slide.active .phase-card:nth-child(5){animation-delay:.34s} .slide.active .phase-card:nth-child(6){animation-delay:.40s}
+    .slide.active .phase-card:nth-child(7){animation-delay:.46s} .slide.active .phase-card:nth-child(8){animation-delay:.52s}
+
+    .slide.active .flow-chips .chip { animation: popIn 0.45s ease both; }
+    .slide.active .flow-chips .chip:nth-child(1){animation-delay:.20s} .slide.active .flow-chips .chip:nth-child(2){animation-delay:.32s}
+    .slide.active .flow-chips .chip:nth-child(3){animation-delay:.44s} .slide.active .flow-chips .chip:nth-child(4){animation-delay:.56s}
+    .slide.active .flow-chips .chip:nth-child(5){animation-delay:.68s}
+
+    .slide.active .param-cell { animation: popIn 0.4s ease both; }
+    .slide.active .param-cell:nth-child(1){animation-delay:.05s}  .slide.active .param-cell:nth-child(2){animation-delay:.09s}
+    .slide.active .param-cell:nth-child(3){animation-delay:.13s}  .slide.active .param-cell:nth-child(4){animation-delay:.17s}
+    .slide.active .param-cell:nth-child(5){animation-delay:.21s}  .slide.active .param-cell:nth-child(6){animation-delay:.25s}
+    .slide.active .param-cell:nth-child(7){animation-delay:.29s}  .slide.active .param-cell:nth-child(8){animation-delay:.33s}
+    .slide.active .param-cell:nth-child(9){animation-delay:.37s}  .slide.active .param-cell:nth-child(10){animation-delay:.41s}
+    .slide.active .param-cell:nth-child(11){animation-delay:.45s} .slide.active .param-cell:nth-child(12){animation-delay:.49s}
+    .slide.active .param-cell:nth-child(13){animation-delay:.53s} .slide.active .param-cell:nth-child(14){animation-delay:.57s}
+    .slide.active .param-cell:nth-child(15){animation-delay:.61s}
+
+    .slide.active .rlhf-row,
+    .slide.active .loop-row,
+    .slide.active .layer,
+    .slide.active .agenda li,
+    .slide.active .workflow-list li,
+    .slide.active .token-line { animation: slideInL 0.5s ease both; }
+    .slide.active .rlhf-row:nth-child(1),.slide.active .loop-row:nth-child(1),.slide.active .layer:nth-child(1),.slide.active .agenda li:nth-child(1),.slide.active .workflow-list li:nth-child(1),.slide.active .token-line:nth-child(1){animation-delay:.15s}
+    .slide.active .rlhf-row:nth-child(2),.slide.active .loop-row:nth-child(2),.slide.active .layer:nth-child(2),.slide.active .agenda li:nth-child(2),.slide.active .workflow-list li:nth-child(2),.slide.active .token-line:nth-child(2){animation-delay:.27s}
+    .slide.active .rlhf-row:nth-child(3),.slide.active .loop-row:nth-child(3),.slide.active .layer:nth-child(3),.slide.active .agenda li:nth-child(3),.slide.active .workflow-list li:nth-child(3){animation-delay:.39s}
+    .slide.active .rlhf-row:nth-child(4),.slide.active .loop-row:nth-child(4),.slide.active .layer:nth-child(4),.slide.active .workflow-list li:nth-child(4){animation-delay:.51s}
+
+    .slide.active .attn-sentence { animation: riseIn 0.55s ease both; }
+    .slide.active .attn-sentence:nth-child(1){animation-delay:.15s}
+    .slide.active .attn-sentence:nth-child(2){animation-delay:.45s}
+
+    .slide.active .speaker { animation: popIn 0.6s cubic-bezier(.2,.8,.2,1) both; }
+    .slide.active .speaker:nth-child(2){animation-delay:.18s}
+
+    .slide.active .tool-chip { animation: popIn 0.45s ease both; }
+    .slide.active .tool-chip:nth-child(1){animation-delay:.1s} .slide.active .tool-chip:nth-child(2){animation-delay:.2s}
+    .slide.active .tool-chip:nth-child(3){animation-delay:.3s} .slide.active .tool-chip:nth-child(4){animation-delay:.4s}
+
+    .slide.active .train-step { animation: popIn 0.45s ease both; }
+    .slide.active .train-step:nth-child(1){animation-delay:.1s} .slide.active .train-step:nth-child(3){animation-delay:.22s}
+    .slide.active .train-step:nth-child(5){animation-delay:.34s} .slide.active .train-step:nth-child(7){animation-delay:.46s}
+    .slide.active .train-step:nth-child(9){animation-delay:.58s}
+    .slide.active .train-arrow { animation: popIn 0.4s ease both; }
+
+    /* Probability bars grow from the left */
+    .slide.active .prob-bar { transform-origin: left center; animation: growBar 0.7s cubic-bezier(.2,.8,.2,1) both; }
+    .slide.active .prob-row:nth-child(1) .prob-bar{animation-delay:.2s} .slide.active .prob-row:nth-child(2) .prob-bar{animation-delay:.34s}
+    .slide.active .prob-row:nth-child(3) .prob-bar{animation-delay:.48s} .slide.active .prob-row:nth-child(4) .prob-bar{animation-delay:.62s}
+
+    .slide.active .thinking-inner { animation: riseIn 0.5s ease 0.15s both; }
+    .slide.active .answer-inner   { animation: riseIn 0.5s ease 0.45s both; }
+
+    .slide.active .stack { animation: riseIn 0.55s ease both; }
+    .slide.active .stack:nth-child(1){ animation-delay: 0.10s; }
+    .slide.active .stack:nth-child(2){ animation-delay: 0.24s; }
+  }
+
+  /* Top progress bar */
+  .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0; z-index: 100; transition: width 0.35s cubic-bezier(.2,.8,.2,1); }
+
+  /* Productivity Paradox slide */
+  .paradox-wrap { display: flex; flex-direction: column; gap: 2rem; margin-top: 2.5rem; width: 100%; max-width: 720px; }
+  .paradox-metrics { display: flex; gap: 2rem; }
+  .paradox-metric { flex: 1; border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.75rem; background: var(--surface); display: flex; flex-direction: column; gap: 0.4rem; }
+  .paradox-metric.dim { opacity: 0.95; }
+  .paradox-metric.lit { border-color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 6%); }
+  .paradox-metric-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); }
+  .paradox-metric.lit .paradox-metric-label { color: var(--accent); }
+  .paradox-metric-value { font-size: 3rem; font-weight: 700; color: var(--fg); letter-spacing: -0.03em; line-height: 1; }
+  .paradox-metric.lit .paradox-metric-value { color: var(--accent); }
+  .paradox-metric-sub { font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.25rem; line-height: 1.4; }
+  .paradox-pipeline { display: flex; align-items: stretch; gap: 0; width: 100%; }
+  .paradox-step { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; padding: 0.55rem 0.5rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); }
+  .paradox-step.fast { border-color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 8%); }
+  .paradox-step-name { font-size: 0.8rem; font-weight: 700; color: var(--fg-muted); white-space: nowrap; }
+  .paradox-step.fast .paradox-step-name { color: var(--accent); }
+  .paradox-step-tag { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 18%); padding: 0.1rem 0.3rem; border-radius: 4px; }
+  .paradox-step-slow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-muted); }
+  .paradox-arr { font-size: 0.9rem; color: var(--border); padding: 0 0.3rem; flex-shrink: 0; align-self: center; }
+  .paradox-quote { font-size: 1.15rem; font-style: italic; color: var(--fg-muted); border-left: 3px solid var(--accent); padding-left: 1.1rem; line-height: 1.55; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .slide.active .paradox-metrics { animation: riseIn 0.55s ease 0.15s both; }
+    .slide.active .paradox-pipeline { animation: riseIn 0.55s ease 0.38s both; }
+    .slide.active .paradox-quote { animation: riseIn 0.5s ease 0.62s both; }
+  }
+
+  /* AI-native engineer flow slide */
+  .eng-flow-wrap { display: flex; flex-direction: column; gap: 2.75rem; margin-top: 2.25rem; width: 100%; }
+  .eng-row { display: flex; align-items: center; gap: 1.25rem; }
+  .eng-row-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); width: 80px; flex-shrink: 0; line-height: 1.4; }
+  .eng-row-label.is-native { color: var(--accent); }
+  .eng-pipeline { display: flex; align-items: stretch; flex: 1; gap: 0; }
+  .eng-step { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0.55rem 0.75rem; border: 2px solid var(--border); border-radius: 10px; flex: 1; background: var(--surface); }
+  .eng-step.dim { opacity: 0.35; }
+  .eng-step.lit { border-color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 8%); }
+  .eng-step.native { border-color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 7%); }
+  .eng-step-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); background: oklch(61.6% 0.1696 251.2 / 18%); padding: 0.1rem 0.35rem; border-radius: 4px; margin-bottom: 0.15rem; }
+  .eng-step-name { font-size: 0.88rem; font-weight: 700; color: var(--fg); white-space: nowrap; }
+  .eng-step.dim .eng-step-name { color: var(--fg-muted); }
+  .eng-step-hint { font-size: 0.68rem; color: var(--fg-muted); text-align: center; line-height: 1.3; margin-top: 0.15rem; }
+  .eng-arr { font-size: 1rem; color: var(--border); padding: 0 0.35rem; flex-shrink: 0; align-self: center; }
+  .eng-arr.is-native { color: var(--accent); opacity: 0.5; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .slide.active .eng-row { animation: riseIn 0.55s ease both; }
+    .slide.active .eng-row:nth-child(1) { animation-delay: 0.15s; }
+    .slide.active .eng-row:nth-child(2) { animation-delay: 0.42s; }
+  }
+
+  /* ============================================================
+     Embeddings session — additional components
+     ============================================================ */
+
+  /* "Odd one out" chip variant (red, for the hook slide) */
+  .tool-chip.odd { border-color: var(--wu-color-red-deep); color: oklch(36% 0.19 29); background: oklch(53.1% 0.2178 29.2 / 7%); font-weight: 700; }
+
+  /* Simple bordered id-card, reused for "naive attempt" slides */
+  .id-row { display: flex; gap: 1.1rem; margin-top: 2.25rem; flex-wrap: wrap; }
+  .id-card { padding: 0.75rem 1.5rem; border: 2px solid var(--border); border-radius: 10px; background: var(--surface); font-size: 1.15rem; font-weight: 700; color: var(--fg-sub); font-family: monospace; }
+
+  /* 2D quadrant plot for the personality-vector activity */
+  .quadrant-wrap { display: flex; align-items: center; gap: 2.5rem; margin-top: 2.25rem; }
+  .quadrant { width: 420px; height: 420px; border: 1.5px solid var(--border); border-radius: 14px; position: relative; background: var(--surface); flex-shrink: 0; }
+  .qline-v, .qline-h { position: absolute; background: var(--border); }
+  .qline-v { left: 50%; top: 0; bottom: 0; width: 1px; }
+  .qline-h { top: 50%; left: 0; right: 0; height: 1px; }
+  .qaxis { position: absolute; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-muted); }
+  .qaxis.top    { top: 0.6rem; left: 50%; transform: translateX(-50%); }
+  .qaxis.bottom { bottom: 0.6rem; left: 50%; transform: translateX(-50%); }
+  .qaxis.left   { left: 0.6rem; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: left center; }
+  .qaxis.right  { right: 0.6rem; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: right center; }
+  .qpoint { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 1px 6px oklch(0% 0 0 / 20%); transform: translate(-50%, -50%); }
+  .qpoint.alt { background: var(--wu-color-orange-deep); }
+  .qlabel { position: absolute; font-size: 0.85rem; font-weight: 700; color: var(--fg); white-space: nowrap; transform: translate(-50%, -145%); }
+  .quadrant-legend { display: flex; flex-direction: column; gap: 0.9rem; }
+  .qleg-item { display: flex; align-items: baseline; gap: 0.65rem; }
+  .qleg-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .qleg-dot.alt { background: var(--wu-color-orange-deep); }
+  .qleg-text { font-size: 1.02rem; font-weight: 600; color: var(--fg-sub); }
+
+  /* Nearest-neighbor list, reuses prob-bar visual language for similarity scores */
+  @media (prefers-reduced-motion: no-preference) {
+    .slide.active .quadrant-legend .qleg-item { animation: slideInL 0.5s ease both; }
+    .slide.active .quadrant-legend .qleg-item:nth-child(1){animation-delay:.2s}
+    .slide.active .quadrant-legend .qleg-item:nth-child(2){animation-delay:.32s}
+    .slide.active .quadrant-legend .qleg-item:nth-child(3){animation-delay:.44s}
+    .slide.active .quadrant-legend .qleg-item:nth-child(4){animation-delay:.56s}
+    .slide.active .qpoint { animation: popIn 0.45s ease both; }
+    .slide.active .id-card { animation: popIn 0.45s ease both; }
+    .slide.active .id-row .id-card:nth-child(1){animation-delay:.1s} .slide.active .id-row .id-card:nth-child(2){animation-delay:.2s} .slide.active .id-row .id-card:nth-child(3){animation-delay:.3s}
+  }
+  /* ============================================================
+     Vector DB session — additional components
+     ============================================================ */
+  .code-block { background: #0e0e0e; border-radius: 12px; padding: 1.5rem 1.75rem; margin-top: 1.75rem; width: 100%; max-width: 760px; overflow-x: auto; }
+  .code-block pre { margin: 0; font-family: 'Fira Code', 'Fira Sans', monospace; font-size: 1rem; line-height: 1.7; color: #d4d4d4; white-space: pre; }
+  .tok-kw   { color: #c586c0; }
+  .tok-str  { color: #ce9178; }
+  .tok-fn   { color: #dcdcaa; }
+  .tok-com  { color: #6a9955; }
+  .tok-num  { color: #b5cea8; }
+  .tok-var  { color: #9cdcfe; }
+
+  .simple-table { width: 100%; max-width: 700px; margin-top: 2rem; border-collapse: collapse; }
+  .simple-table th, .simple-table td { text-align: left; padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 1.05rem; }
+  .simple-table th { color: var(--fg-muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; }
+  .simple-table td { color: var(--fg-sub); font-family: monospace; }
+  .simple-table tr:last-child td { border-bottom: none; }
+
+  .stack-flow { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; margin-top: 2rem; }
+  .stack-flow .id-card { min-width: 260px; text-align: center; }
+  .stack-arrow { font-size: 1.4rem; color: var(--fg-muted); line-height: 1; }
+
+  .col-grid { display: flex; gap: 1.75rem; margin-top: 2.25rem; flex-wrap: wrap; }
+  .col-card { flex: 1; min-width: 220px; border: 1.5px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+  .col-card.highlight { border-color: var(--accent); }
+  .col-card .label { margin-bottom: 1rem; display: block; }
+  .col-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .col-card li { font-weight: 700; color: var(--fg-sub); font-size: 1.05rem; }
+
+  .branch-row { display: flex; justify-content: center; gap: 2rem; margin: 0.4rem 0; }
+  </style>
+</head>
+<body>
+
+<div class="slides">
+
+  <!-- 01 · TITLE -->
+  <div class="slide title-slide active">
+    <div class="kicker">Live Demo &middot; 45 Minutes</div>
+    <h1>RAG,<br><span class="accent">Hands-On.</span></h1>
+    <p style="margin-top: 2rem; max-width: 620px;">Turning retrieval into trustworthy answers — with real code, and real failure modes.</p>
+    <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: baseline; gap: 0.75rem;">
+      <span class="label" style="color: var(--accent);">Presented by</span>
+      <span style="font-size: 1.05rem; font-weight: 700; color: var(--fg);">Fahim</span>
+    </div>
+  </div>
+
+  <!-- 02 · AGENDA -->
+  <div class="slide">
+    <div class="kicker">What we'll cover</div>
+    <h2>Six stops, <span class="accent">one working chatbot.</span></h2>
+    <ul class="agenda">
+      <li><div class="ag-time">0:00</div><div><div class="ag-title">Recap</div><div class="ag-desc">Where we left off — meaning, then search</div></div></li>
+      <li><div class="ag-time">0:03</div><div><div class="ag-title">The Problem</div><div class="ag-desc">Why LLMs need help in the first place</div></div></li>
+      <li><div class="ag-time">0:08</div><div><div class="ag-title">The RAG Loop</div><div class="ag-desc">Retrieval meets generation</div></div></li>
+      <li><div class="ag-time">0:14</div><div><div class="ag-title">Live Demo</div><div class="ag-desc">From search results to a real, trustworthy answer</div></div></li>
+      <li><div class="ag-time">0:24</div><div><div class="ag-title">Leveling Up</div><div class="ag-desc">Query rewriting & reranking, added live</div></div></li>
+      <li><div class="ag-time">0:35</div><div><div class="ag-title">Why It Matters</div><div class="ag-desc">The wider landscape, and what's next</div></div></li>
+    </ul>
+  </div>
+
+  <!-- 03 · RECAP -->
+  <div class="slide">
+    <div class="kicker">Where we left off</div>
+    <h2>Meaning &rarr; Search &rarr; <span class="accent">Now, an answer.</span></h2>
+    <div class="stack-flow">
+      <div class="id-card">Embeddings — turn meaning into numbers</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card">Vector Databases — search a billion of them in milliseconds</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card" style="border-color: var(--accent); color: var(--accent); font-weight: 700;">RAG — today</div>
+    </div>
+    <p style="margin-top: 2rem; max-width: 640px;">We ended last time on: the vector database isn't the AI, it's the retrieval layer. Today we build the other half.</p>
+  </div>
+
+  <!-- 04 · THE PROBLEM -->
+  <div class="slide">
+    <div class="kicker">The problem RAG solves</div>
+    <h2>Closed-book exam <span class="accent">vs.</span> open-book exam.</h2>
+    <div class="col-grid">
+      <div class="col-card">
+        <span class="label">Closed-book — a normal LLM</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">Only knows what it memorized during training. Asked about something outside that, it guesses — sometimes confidently, even when wrong.</p>
+      </div>
+      <div class="col-card highlight">
+        <span class="label" style="color: var(--accent);">Open-book — RAG</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">Handed the exact relevant pages before answering. Can still get it wrong, but now it's reading real material instead of guessing from memory.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04b · WHY RAG, PRECISELY -->
+  <div class="slide">
+    <div class="kicker">Why RAG, precisely</div>
+    <h2>Four real reasons — <span class="accent">not just one.</span></h2>
+    <div class="col-grid">
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">1. Missing entirely</span>
+        <p style="font-size: 0.95rem; color: var(--fg-sub); margin-top: 0.5rem;">Too recent, or was never public in the first place. Not a memory problem — there's no memory to draw on at all.</p>
+        <p style="font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.6rem; font-style: italic;">e.g. this morning's product update, or your company's internal API docs</p>
+      </div>
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">2. Prevents wrong blending</span>
+        <p style="font-size: 0.95rem; color: var(--fg-sub); margin-top: 0.5rem;">The model may have related but generic memory, and could mix it in unless explicitly told not to.</p>
+        <p style="font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.6rem; font-style: italic;">e.g. generic "connection pooling" knowledge blending with your specific setup</p>
+      </div>
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">3. Precision over approximation</span>
+        <p style="font-size: 0.95rem; color: var(--fg-sub); margin-top: 0.5rem;">Training compresses knowledge lossily. Retrieval hands over the exact source text instead of a fuzzy memory of it.</p>
+        <p style="font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.6rem; font-style: italic;">e.g. an exact version number or policy wording, not a paraphrase</p>
+      </div>
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">4. Traceability</span>
+        <p style="font-size: 0.95rem; color: var(--fg-sub); margin-top: 0.5rem;">A bonus, not a core reason — but a real one. You can point to which document an answer came from.</p>
+        <p style="font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.6rem; font-style: italic;">e.g. showing the user the exact paragraph the answer was built from</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 · TWO OPTIONS -->
+  <div class="slide">
+    <div class="kicker">Two ways to give a model new knowledge</div>
+    <h2>Retrain the model, <span class="accent">or just look things up.</span></h2>
+    <div class="col-grid">
+      <div class="col-card">
+        <span class="label">Fine-tuning</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">Retrain the model on your data. Real, but slow and expensive — redo it every time your data changes.</p>
+      </div>
+      <div class="col-card highlight">
+        <span class="label" style="color: var(--accent);">RAG</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">Leave the model alone. Fetch relevant facts at question-time instead. Updates instantly whenever your documents change.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05b · WHAT R-A-G ACTUALLY STANDS FOR -->
+  <div class="slide">
+    <div class="kicker">First, the name itself</div>
+    <h2>R-A-G: <span class="accent">three words, one pipeline.</span></h2>
+    <div class="col-grid">
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">R — Retrieval</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">Go find the relevant material. This is Embeddings and Vector Databases — turning meaning into numbers, then searching them fast.</p>
+      </div>
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">A — Augmented</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">Hand that material to the model — added directly into the prompt, alongside the original question.</p>
+      </div>
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">G — Generation</span>
+        <p style="font-size: 1rem; color: var(--fg-sub); margin-top: 0.5rem;">The model reads what it was given and writes the actual answer, in plain English.</p>
+      </div>
+    </div>
+    <p style="margin-top: 1.75rem; max-width: 680px;">Three words, in order — the name is describing the pipeline itself, not naming some clever trick.</p>
+  </div>
+
+  <!-- 06 · THE RAG LOOP -->
+  <div class="slide">
+    <div class="kicker">The whole pipeline, end to end</div>
+    <h2>Retrieval gathers evidence.<br>The LLM <span class="accent">writes the answer.</span></h2>
+    <div class="stack-flow">
+      <div class="id-card">User Question</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card"><span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; line-height: 22px; margin-right: 0.6rem;">R</span>Embedding</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card"><span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; line-height: 22px; margin-right: 0.6rem;">R</span>Vector DB</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card"><span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; line-height: 22px; margin-right: 0.6rem;">R</span>Top K Documents</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card"><span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--wu-color-orange-deep); color: #fff; font-size: 0.8rem; font-weight: 700; line-height: 22px; margin-right: 0.6rem;">A</span>Build a prompt (context + question)</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card"><span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--wu-color-green-deep); color: #fff; font-size: 0.8rem; font-weight: 700; line-height: 22px; margin-right: 0.6rem;">G</span>LLM</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card" style="border-color: var(--accent); color: var(--accent);"><span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--wu-color-green-deep); color: #fff; font-size: 0.8rem; font-weight: 700; line-height: 22px; margin-right: 0.6rem;">G</span>Answer</div>
+    </div>
+    <p style="margin-top: 1.75rem; max-width: 640px; color: var(--fg-muted);">Colored circles show which letter of R-A-G each step belongs to — retrieval (blue) does the finding, augmentation (orange) does the assembling, generation (green) does the writing.</p>
+  </div>
+
+  <!-- 07 · HONESTY BEAT -->
+  <div class="slide">
+    <div class="kicker">A common assumption, worth correcting early</div>
+    <h2>"We added real documents, so it can't <span class="accent">make things up anymore."</span></h2>
+    <p style="margin-top: 1.25rem; max-width: 680px;">Not quite — two separate things have to go right, not one:</p>
+    <div class="id-row" style="margin-top: 1.5rem; align-items: flex-start;">
+      <div class="id-card" style="font-weight: 400; line-height: 1.5; text-align: left;"><strong>1. Retrieval finds the right documents</strong><br>This can fail — it's the vector search from Vector Databases, and it isn't perfect.</div>
+      <div class="id-card" style="font-weight: 400; line-height: 1.5; text-align: left;"><strong>2. The prompt says what to do if they don't</strong><br>Easy to skip — and if you do, the model guesses instead of admitting it doesn't know.</div>
+    </div>
+    <p style="margin-top: 1.75rem; max-width: 680px; font-weight: 700; color: var(--fg);">Skip either one, and you get a fluent, confident, wrong answer instead of an honest "I don't know." We're about to watch this happen live.</p>
+  </div>
+
+  <!-- DIVIDER · LIVE DEMO -->
+  <div class="slide divider center">
+    <h2>Live Demo</h2>
+    <div class="sub">From search results to a real, trustworthy answer</div>
+  </div>
+
+  <!-- 09 · DEMO STEP 1 -->
+  <div class="slide">
+    <div class="kicker">Step 1 — Reconnect to our existing collection</div>
+    <h2>Same collection. <span class="accent">New capability.</span></h2>
+    <div class="code-block"><pre><span class="tok-kw">import</span> { createClient, runStep, printResults, COLLECTION_NAME } <span class="tok-kw">from</span> <span class="tok-str">"./chroma-client.js"</span>;
+<span class="tok-kw">import</span> { createGeminiClient, generateAnswer, requireApiKey, MODEL_NAME } <span class="tok-kw">from</span> <span class="tok-str">"./gemini-client.js"</span>;
+
+<span class="tok-kw">await</span> <span class="tok-fn">runStep</span>(<span class="tok-str">"step5-generate"</span>, <span class="tok-kw">async</span> () =&gt; {
+  <span class="tok-fn">requireApiKey</span>();
+
+  <span class="tok-kw">const</span> client = <span class="tok-fn">createClient</span>();
+  <span class="tok-kw">await</span> client.<span class="tok-fn">heartbeat</span>();
+
+  <span class="tok-kw">const</span> collection = <span class="tok-kw">await</span> client.<span class="tok-fn">getOrCreateCollection</span>({ name: COLLECTION_NAME });</pre></div>
+  </div>
+
+  <!-- 10 · DEMO STEP 2 -->
+  <div class="slide">
+    <div class="kicker">Step 2 — Retrieve, exactly like last time</div>
+    <h2>This part is entirely <span class="accent">Vector Databases.</span></h2>
+    <div class="code-block"><pre><span class="tok-kw">const</span> QUERY_TEXT = process.argv.<span class="tok-fn">slice</span>(<span class="tok-num">2</span>).<span class="tok-fn">join</span>(<span class="tok-str">" "</span>)
+  || <span class="tok-str">"How can I improve database connection performance?"</span>;
+<span class="tok-kw">const</span> N_RESULTS = <span class="tok-num">3</span>;
+
+<span class="tok-kw">const</span> results = <span class="tok-kw">await</span> collection.<span class="tok-fn">query</span>({
+  queryTexts: [QUERY_TEXT],
+  nResults: N_RESULTS,
+});
+
+<span class="tok-fn">printResults</span>(results);</pre></div>
+  </div>
+
+  <!-- 11 · DEMO STEP 3 -->
+  <div class="slide">
+    <div class="kicker">Step 3 — the one new idea</div>
+    <h2>One sentence doing <span class="accent">all the work.</span></h2>
+    <div class="code-block"><pre><span class="tok-kw">const</span> context = (results.<span class="tok-fn">rows</span>()[<span class="tok-num">0</span>] ?? [])
+  .<span class="tok-fn">map</span>((row) =&gt; row.document)
+  .<span class="tok-fn">join</span>(<span class="tok-str">"\n\n"</span>);
+
+<span class="tok-kw">const</span> systemPrompt = <span class="tok-str">`Answer using ONLY the following context. If the answer is not in the context, say "I don't have enough information to answer that" — do not guess.\n\nContext:\n${context}`</span>;</pre></div>
+    <p style="margin-top: 1.25rem; max-width: 640px; font-weight: 700; color: var(--fg);">That one instruction is doing more work than almost anything else in this system.</p>
+  </div>
+
+  <!-- 12 · DEMO STEP 4 -->
+  <div class="slide">
+    <div class="kicker">Step 4 — generation</div>
+    <h2>A real, fluent answer — <span class="accent">grounded in what we retrieved.</span></h2>
+    <div class="code-block"><pre><span class="tok-kw">const</span> ai = <span class="tok-fn">createGeminiClient</span>();
+<span class="tok-kw">const</span> answer = <span class="tok-kw">await</span> <span class="tok-fn">generateAnswer</span>(ai, systemPrompt, QUERY_TEXT);
+
+<span class="tok-fn">console.log</span>(<span class="tok-str">"Grounded answer:"</span>);
+<span class="tok-fn">console.log</span>(<span class="tok-str">`   ${answer.trim()}`</span>);</pre></div>
+    <p style="margin-top: 1.25rem; max-width: 640px; font-weight: 700; color: var(--fg);">Every fact in that answer traces back to a document we retrieved a moment ago.</p>
+  </div>
+
+  <!-- DIVIDER · LEVELING UP -->
+  <div class="slide divider center">
+    <h2>Leveling Up</h2>
+    <div class="sub">Two real upgrades, added live</div>
+  </div>
+
+  <!-- 13c · QUERY REWRITING + RERANKING, EXPLAINED -->
+  <div class="slide">
+    <div class="kicker">Two upgrades, two different jobs</div>
+    <h2>Fix the question. <span class="accent">Fix the results.</span></h2>
+    <div class="col-grid">
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">Query Rewriting</span>
+        <p style="font-size: 0.95rem; color: var(--fg-sub); margin-top: 0.5rem;">Real questions are messy — typos, vague phrasing. Clean it up with an LLM before it ever reaches search.</p>
+        <p style="font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.6rem; font-style: italic;">Fixes the input to retrieval</p>
+      </div>
+      <div class="col-card">
+        <span class="label" style="color: var(--accent);">Reranking</span>
+        <p style="font-size: 0.95rem; color: var(--fg-sub); margin-top: 0.5rem;">Vector similarity is fast but approximate. Retrieve wide, then have something smarter reorder before generating.</p>
+        <p style="font-size: 0.88rem; color: var(--fg-muted); margin-top: 0.6rem; font-style: italic;">Fixes the output of retrieval</p>
+      </div>
+    </div>
+    <div class="stack-flow" style="margin-top: 2rem;">
+      <div class="id-card">Question</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card" style="border-color: var(--accent); color: var(--accent);">Query Rewriting</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card">Retrieve (wide net)</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card" style="border-color: var(--accent); color: var(--accent);">Reranking</div>
+      <div class="stack-arrow">&darr;</div>
+      <div class="id-card">Generate</div>
+    </div>
+  </div>
+
+  <!-- 14 · QUERY REWRITING -->
+  <div class="slide">
+    <div class="kicker">Upgrade 1 — fix the question before searching</div>
+    <h2>Query <span class="accent">Rewriting.</span></h2>
+    <p style="margin-top: 1rem; max-width: 660px;">Real questions are messy — typos, missing context, ambiguous phrasing. Ask an LLM to clean it up before it ever reaches the vector DB.</p>
+    <div class="code-block"><pre><span class="tok-kw">const</span> REWRITE_PROMPT =
+  <span class="tok-str">"Rewrite the user's question to be clearer and more specific for a search engine. Return ONLY the rewritten question."</span>;
+
+<span class="tok-kw">const</span> rewritten = (
+  <span class="tok-kw">await</span> <span class="tok-fn">generateAnswer</span>(ai, REWRITE_PROMPT, QUERY_TEXT)
+).<span class="tok-fn">trim</span>();
+
+<span class="tok-fn">console.log</span>(<span class="tok-str">`Original query:  "${QUERY_TEXT}"`</span>);
+<span class="tok-fn">console.log</span>(<span class="tok-str">`Rewritten query: "${rewritten}"`</span>);</pre></div>
+  </div>
+
+  <!-- 15 · RERANKING -->
+  <div class="slide">
+    <div class="kicker">Upgrade 2 — fix the results before generating</div>
+    <h2>Reranking.</h2>
+    <p style="margin-top: 1rem; max-width: 660px;">Retrieve more candidates than you need, cheaply. Then have a second pass reorder them by true relevance before they reach the final prompt.</p>
+    <div class="code-block"><pre><span class="tok-kw">const</span> results = <span class="tok-kw">await</span> collection.<span class="tok-fn">query</span>({
+  queryTexts: [QUERY_TEXT],
+  nResults: N_CANDIDATES, <span class="tok-com">// 10 — cast a wide net</span>
+});
+
+<span class="tok-kw">const</span> candidates = results.<span class="tok-fn">rows</span>()[<span class="tok-num">0</span>] ?? [];
+
+<span class="tok-kw">const</span> numbered = candidates
+  .<span class="tok-fn">map</span>((row, i) =&gt; <span class="tok-str">`${i + 1}. ${row.document}`</span>)
+  .<span class="tok-fn">join</span>(<span class="tok-str">"\n"</span>);
+
+<span class="tok-kw">const</span> ranking = <span class="tok-kw">await</span> <span class="tok-fn">generateAnswer</span>(
+  ai,
+  RERANK_PROMPT,
+  <span class="tok-str">`Question: ${QUERY_TEXT}\n\nPassages:\n${numbered}`</span>
+);</pre></div>
+    <p style="margin-top: 1.1rem; max-width: 660px; color: var(--fg-muted);">The real script also parses this response defensively — Gemini sometimes replies as its own numbered list instead of bare numbers — and falls back to vector order if that fails. Omitted here to keep the slide readable.</p>
+  </div>
+
+  <!-- 16 · BREAK IT ON PURPOSE -->
+  <div class="slide">
+    <div class="kicker">Now, on purpose — watch it fail correctly</div>
+    <h2>Same off-topic question,<br><span class="accent">with and without the guardrail.</span></h2>
+    <div class="flow" style="margin-top: 1.75rem;">
+      <div class="flow-row">
+        <span class="flow-label">With guardrail</span><span class="flow-dash"></span>
+        <div class="flow-chips"><span class="chip chip-green">"I don't have enough information to answer that"</span></div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-row">
+        <span class="flow-label">Without guardrail</span><span class="flow-dash"></span>
+        <div class="flow-chips"><span class="chip chip-red">"The capital of France is Paris."</span></div>
+      </div>
+    </div>
+    <p style="margin-top: 1.75rem; max-width: 680px; font-weight: 700; color: var(--fg);">Nothing in our documents mentioned France. One version admits it doesn't know. The other quietly answers from its own training instead of our data — that's the entire difference between a RAG system you can trust and one that lies to you politely.</p>
+  </div>
+
+  <!-- 17 · OPTIONAL STRETCH: RETRY LOOP -->
+  <div class="slide">
+    <div class="kicker">If there's time — a taste of what's next</div>
+    <h2>What if it just <span class="accent">tried again?</span></h2>
+    <div class="train-steps">
+      <div class="train-step"><div class="train-box">"I don't know"</div></div>
+      <div class="train-arrow">&rarr;</div>
+      <div class="train-step"><div class="train-box">Rewrite the query</div></div>
+      <div class="train-arrow">&rarr;</div>
+      <div class="train-step"><div class="train-box">Retrieve again</div></div>
+      <div class="train-arrow">&rarr;</div>
+      <div class="train-step"><div class="train-box accent-box">Try once more</div></div>
+    </div>
+    <p style="margin-top: 1.75rem; max-width: 660px;">This tiny retry loop is a one-step preview of a much bigger idea called agentic RAG — an agent that can plan, retrieve, judge, and retry on its own.</p>
+  </div>
+
+  <!-- DIVIDER · THE WIDER LANDSCAPE -->
+  <div class="slide divider center">
+    <h2>The Wider Landscape</h2>
+    <div class="sub">Today's two, and the rest of the field</div>
+  </div>
+
+  <!-- 19 · LANDSCAPE GRID -->
+  <div class="slide">
+    <div class="kicker">Today's two, and the rest of the field</div>
+    <h2>We built 2 of these <span class="accent">today.</span></h2>
+    <div class="tools-row" style="margin-top: 2rem;">
+      <div class="tool-chip highlight">&#10003; Query Rewriting</div>
+      <div class="tool-chip highlight">&#10003; Reranking</div>
+      <div class="tool-chip">Hybrid Search</div>
+      <div class="tool-chip">HyDE</div>
+      <div class="tool-chip">Contextual Retrieval</div>
+      <div class="tool-chip">GraphRAG</div>
+      <div class="tool-chip">RAPTOR</div>
+      <div class="tool-chip">Self-RAG</div>
+      <div class="tool-chip">FLARE</div>
+      <div class="tool-chip">Agentic RAG</div>
+      <div class="tool-chip">Adaptive RAG</div>
+    </div>
+  </div>
+
+  <!-- 20 · BENCHMARK STAT -->
+  <div class="slide center">
+    <div class="kicker">Does any of this actually matter?</div>
+    <h1>44% <span class="accent">&rarr;</span> 63%</h1>
+    <p style="margin-top: 2rem; max-width: 620px;">A 2024 benchmark found plain retrieval-only RAG answers 44% of factual questions correctly. Advanced techniques — like the two we just added — push that to roughly 63%. A real, measurable gap.</p>
+  </div>
+
+  <!-- DIVIDER · WHY IT MATTERS -->
+  <div class="slide divider center">
+    <h2>Why It Matters</h2>
+    <div class="sub">Where this actually lives</div>
+  </div>
+
+  <!-- 22 · WHY IT MATTERS -->
+  <div class="slide">
+    <div class="kicker">Where this actually lives</div>
+    <h2>This is <span class="accent">"chat with your docs."</span></h2>
+    <p style="margin-top: 1.25rem; max-width: 680px;">Customer support bots, internal company wikis turned into assistants, code-search tools like Copilot's codebase chat — all running this exact loop.</p>
+  </div>
+
+  <!-- 23 · CLOSING LINE -->
+  <div class="slide center">
+    <div class="kicker">Three ideas, one pipeline</div>
+    <h1 style="max-width: 780px; margin: 0 auto;">Numbers. <span class="accent">Search.</span> Now, trustworthy answers.</h1>
+    <p style="margin-top: 2rem; max-width: 660px;">Embeddings: turn meaning into numbers. Vector Databases: search a billion of them in milliseconds. RAG: hand what you find to a model, and get an answer back you can actually trust — because you told it what to do when it doesn't know.</p>
+  </div>
+
+  <!-- 24 · THANK YOU / Q&A -->
+  <div class="slide center">
+    <div class="kicker">Questions?</div>
+    <h1>Thank you.</h1>
+    <p style="margin-top: 2rem; max-width: 560px;">Retrieve. Augment. Generate. That's the whole shape of it.</p>
+  </div>
+
+</div>
+
+<div class="progress-bar" id="progress"></div>
+
+<nav class="slide-nav">
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</nav>
+<div class="slide-counter" id="counter"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  let cur = 0;
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    counter.textContent = `${cur + 1} / ${slides.length}`;
+    progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
+  }
+  document.getElementById('next').onclick = () => show(cur + 1);
+  document.getElementById('prev').onclick  = () => show(cur - 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
+    if (e.key === 'ArrowLeft') show(cur - 1);
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+  show(0);
+</script>
+</body>
+</html>
