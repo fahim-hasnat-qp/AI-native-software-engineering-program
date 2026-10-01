@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Agents Engineering Workshop — Slides 13–19</title>
+  <style>
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap");
+
+/* ---- base.css palette (wick-ui) ---- */
+:root {
+  --wu-color-gray-lead: oklch(47.8% 0.0244 255);
+  --wu-color-gray-subtle: oklch(68.9% 0 0);
+  --wu-color-gray-40: oklch(88.2% 0 0);
+  --wu-color-gray-25: oklch(93.1% 0 0);
+  --wu-color-gray-10: oklch(97% 0 0);
+  --wu-color-blue-p: oklch(61.6% 0.1696 251.2);
+  --wu-color-blue-deep: oklch(45.1% 0.1159 254.5);
+  --wu-color-green-deep: oklch(49.9% 0.1603 139.9);
+  --wu-color-red-deep: oklch(53.1% 0.2178 29.2);
+  --wu-color-orange-deep: oklch(72.3% 0.1755 56.7);
+
+  --bg: #ffffff;
+  --fg: #0f0f0f;
+  --fg-sub: #2e2e2e;
+  --fg-muted: #666666;
+  --border: #e0e0e0;
+  --surface: #f4f4f6;
+  --accent: var(--wu-color-blue-p);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Fira Sans", system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--fg-sub);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #111214;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slides {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 30px 80px oklch(0% 0 0 / 35%);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3.5rem 7rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  overflow-y: auto;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.slide.center {
+  align-items: center;
+  text-align: center;
+}
+
+.slide.divider {
+  background: var(--accent);
+  align-items: center;
+  text-align: center;
+}
+.slide.divider h2 {
+  color: #fff;
+}
+.slide.divider .sub {
+  font-size: 1.2rem;
+  color: oklch(100% 0 0 / 65%);
+  margin-top: 0.75rem;
+}
+
+h1 {
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+}
+p {
+  font-size: 1.2rem;
+  color: var(--fg-sub);
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+
+.accent {
+  color: var(--accent);
+}
+.muted {
+  color: var(--fg-muted);
+}
+
+/* code / diagram blocks */
+pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--fg-sub);
+  max-width: 720px;
+  overflow-x: auto;
+  margin-top: 1.5rem;
+  box-shadow: 0 1px 2px oklch(0% 0 0 / 4%), 0 12px 28px oklch(0% 0 0 / 5%);
+}
+
+.quote {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--fg-muted);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  padding: 1.1rem 1.3rem;
+  border-radius: 0 10px 10px 0;
+  margin-top: 1.75rem;
+  max-width: 680px;
+  line-height: 1.55;
+}
+
+/* harness / architecture layer box */
+.box {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 1.75rem;
+  width: 100%;
+  max-width: 720px;
+  box-shadow: 0 1px 2px oklch(0% 0 0 / 4%), 0 16px 36px oklch(0% 0 0 / 6%);
+}
+.box .layer {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.box .layer:last-child {
+  border-bottom: none;
+}
+.box .layer-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  width: 130px;
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+}
+.box .layer-desc {
+  font-size: 1.02rem;
+  color: var(--fg-sub);
+  line-height: 1.5;
+}
+
+/* tool chips */
+.chips {
+  display: flex;
+  gap: 0.85rem;
+  margin-top: 1.75rem;
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 0.55rem 1.2rem;
+  border-radius: 9px;
+  border: 1.5px solid var(--border);
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: var(--fg-sub);
+  background: var(--surface);
+  box-shadow: 0 1px 2px oklch(0% 0 0 / 4%);
+}
+.chip.hot {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: oklch(61.6% 0.1696 251.2 / 8%);
+  font-weight: 700;
+}
+.chip.read {
+  border-color: var(--wu-color-green-deep);
+  color: var(--wu-color-green-deep);
+}
+.chip.execute {
+  border-color: var(--wu-color-orange-deep);
+  color: var(--wu-color-orange-deep);
+}
+.chip.blocked {
+  border-color: var(--wu-color-red-deep);
+  color: var(--wu-color-red-deep);
+}
+
+/* agenda / progression list */
+.agenda {
+  list-style: none;
+  margin-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+}
+.agenda li {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.agenda li:last-child {
+  border-bottom: none;
+}
+.agenda .num {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  width: 28px;
+  flex-shrink: 0;
+}
+.agenda .title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+.agenda .desc {
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  margin-top: 0.15rem;
+}
+
+.example-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.example-link:hover {
+  background: oklch(61.6% 0.1696 251.2 / 8%);
+}
+
+.note {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  border-top: 1px dashed var(--border);
+  padding-top: 1rem;
+  max-width: 680px;
+}
+
+/* nav / progress */
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  background: var(--accent);
+  width: 0;
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+.slide-nav {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 100;
+}
+.slide-nav button {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.slide-nav button:hover {
+  color: var(--fg);
+  background: var(--wu-color-gray-10);
+}
+.slide-counter {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  z-index: 100;
+}
+
+/* ---- animated loop diagram ---- */
+.loop-diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.25rem;
+  flex-wrap: wrap;
+}
+.loop-step {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.4rem;
+  background: var(--surface);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--fg-sub);
+}
+.loop-arrow-right {
+  font-size: 1.4rem;
+  color: var(--fg-muted);
+}
+.loop-back-label {
+  font-size: 0.92rem;
+  color: var(--fg-muted);
+  margin-top: 1rem;
+  font-style: italic;
+}
+.loop-exit {
+  margin-top: 0.85rem;
+  padding: 0.85rem 1.3rem;
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  display: inline-block;
+}
+@keyframes stepPulse {
+  0%, 11% { background: oklch(61.6% 0.1696 251.2 / 14%); border-color: var(--accent); color: var(--accent); }
+  16%, 100% { background: var(--surface); border-color: var(--border); color: var(--fg-sub); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .slide.active .loop-step { animation: stepPulse 4.5s ease infinite; }
+  .slide.active .loop-step:nth-child(1) { animation-delay: 0s; }
+  .slide.active .loop-step:nth-child(3) { animation-delay: 1.5s; }
+  .slide.active .loop-step:nth-child(5) { animation-delay: 3s; }
+}
+
+/* ---- worked-example timeline ---- */
+.timeline {
+  margin-top: 1.75rem;
+  width: 100%;
+  max-width: 740px;
+}
+.timeline-row {
+  display: flex;
+  gap: 1.25rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.timeline-row:last-child { border-bottom: none; }
+.timeline-turn {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  width: 62px;
+  flex-shrink: 0;
+  padding-top: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.timeline-desc {
+  font-size: 0.98rem;
+  color: var(--fg-sub);
+  line-height: 1.5;
+}
+.timeline-desc code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--surface);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+  </style>
+</head>
+<body>
+<div class="slides">
+
+  <!-- ============ SESSION 2 ============ -->
+  <div class="slide center active">
+    <div class="kicker">Session 11</div>
+    <h1>The loop, the bill,<br><span class="accent">and retries</span></h1>
+  </div>
+
+  <!-- 14a · LOOP ANIMATED -->
+  <div class="slide">
+    <div class="kicker">Watch it run</div>
+    <h2>The loop, animated</h2>
+    <div class="loop-diagram">
+      <div class="loop-step">1. Call the model</div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div class="loop-step">2. Tool calls requested?</div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div class="loop-step">3. Execute tools, push results</div>
+    </div>
+    <div class="loop-back-label">&#8635; loops back to step 1 while tool calls keep coming</div>
+    <div class="loop-exit">No tool calls &rarr; return response. Loop ends.</div>
+    <p class="note">Same three steps, every single turn. The only thing that changes call to call is what's sitting in <code>messages</code>.</p>
+  </div>
+
+  <!-- 14 · AGENT LOOP -->
+  <div class="slide">
+    <div class="kicker">Example 03</div>
+    <h2>The agent loop</h2>
+    <pre>while (!finished) {
+  response = model(messages, tools)
+
+  if (response.toolCalls.length) {
+    for (call of response.toolCalls)
+      messages.push(executeTool(call))
+  } else {
+    return response   // unless finish_reason is "length"
+  }
+}</pre>
+    <p class="note">Everything else in six sessions is a refinement of this.</p>
+    <a class="example-link" href="https://github.com/salauddin-sifat-qp/ai-agents-engineering-workshop/blob/main/examples/03-agent-loop/README.md">Open examples/03-agent-loop &rarr;</a>
+  </div>
+
+  <!-- 14b · WORKED EXAMPLE -->
+  <div class="slide">
+    <div class="kicker">Let's trace it &middot; 6 turns, one loop</div>
+    <h2>"Refactor <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 4px;">getPokemonByName</code>"</h2>
+    <div style="display: flex; align-items: flex-end; gap: 0.9rem; margin-top: 2.5rem; flex-wrap: wrap;">
+      <div style="text-align: center;">
+        <div class="chip read">search_code</div>
+        <div style="font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.45rem;">found file</div>
+      </div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div style="text-align: center;">
+        <div class="chip read">read_file</div>
+        <div style="font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.45rem;">loaded</div>
+      </div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div style="text-align: center;">
+        <div class="chip execute">edit_file</div>
+        <div style="font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.45rem;">first attempt</div>
+      </div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div style="text-align: center;">
+        <div class="chip blocked">run_tests</div>
+        <div style="font-size: 0.72rem; color: var(--wu-color-red-deep); margin-top: 0.45rem; font-weight: 700;">&#10007; fails</div>
+      </div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div style="text-align: center;">
+        <div class="chip execute">edit_file + run_tests</div>
+        <div style="font-size: 0.72rem; color: var(--wu-color-green-deep); margin-top: 0.45rem; font-weight: 700;">&#10003; passes</div>
+      </div>
+      <div class="loop-arrow-right">&rarr;</div>
+      <div style="text-align: center;">
+        <div class="chip hot">return response</div>
+        <div style="font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.45rem;">done</div>
+      </div>
+    </div>
+    <p class="note">Turn 4 fails, turn 5 fixes it and retries &mdash; exactly the kind of cycle <code>MAX_ITERATIONS</code> exists to bound.</p>
+  </div>
+
+  <!-- 15 · SAFEGUARDS -->
+  <div class="slide">
+    <div class="kicker">Two safeguards, two failures</div>
+    <h2>Bounding the loop</h2>
+    <div class="box">
+      <div class="layer"><div class="layer-label">MAX_ITERATIONS</div><div class="layer-desc">A model that never stops asking for tools, until your budget is gone. <span class="muted">Common range: 10&ndash;20 for most tasks.</span></div></div>
+      <div class="layer"><div class="layer-label">TOOL_TIMEOUT_MS</div><div class="layer-desc">One hung tool call stalling the whole run, with no output at all. <span class="muted">Common range: 30&ndash;60s for quick calls, 5&ndash;10 min for slow-but-legitimate ones like a test suite.</span></div></div>
+    </div>
+    <p class="note">Hitting the cap is information: the task was too big, the
+      tools too weak, or the prompt too vague. And a timeout stops the
+      <em>waiting</em>, not the tool &mdash; it may still be running.</p>
+  </div>
+
+  <!-- 17 · STATE -->
+  <div class="slide">
+    <div class="kicker">Example 04</div>
+    <h2>History vs. state</h2>
+    <p>The model itself is always stateless &mdash; that never changes. This is
+      a different split: of the state the <em>harness</em> keeps across turns,
+      which part does the model actually get to see?</p>
+    <div class="box">
+      <div class="layer"><div class="layer-label">messages</div><div class="layer-desc">The model's entire view of the world. Every token is sent, and paid for, on every single call.</div></div>
+      <div class="layer"><div class="layer-label">AgentState</div><div class="layer-desc">Runtime bookkeeping &mdash; iteration count, which files were already read, the last test result. The model never sees it. Costs nothing.</div></div>
+    </div>
+    <div style="display: flex; gap: 1.5rem; margin-top: 1.75rem; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 300px;">
+        <div style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem; color: var(--fg-muted);">messages &mdash; sent every call</div>
+        <pre style="font-size: 0.82rem; margin-top: 0;">[
+  { role: "system", content: "..." },
+  { role: "user",
+    content: "Refactor getPokemonByName" },
+  { role: "tool",
+    content: "&lt;5,800 chars of pokedex.ts&gt;" },
+  { role: "tool",
+    content: "{ ok: false, error: '...' }" }
+]</pre>
+      </div>
+      <div style="flex: 1; min-width: 300px;">
+        <div style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem; color: var(--accent);">AgentState &mdash; never sent, free</div>
+        <pre style="font-size: 0.82rem; margin-top: 0; border-color: var(--accent);">{
+  iterationCount: 4,
+  filesRead: ["pokedex.ts"],
+  lastTestResult:
+    "fail: expected 200 got 404"
+}</pre>
+      </div>
+    </div>
+    <p class="note">Example 04's truncation (800 chars) is a blunt stand-in &mdash; real compaction is next.</p>
+    <a class="example-link" href="https://github.com/salauddin-sifat-qp/ai-agents-engineering-workshop/blob/main/examples/04-state/README.md">Open examples/04-state &rarr;</a>
+  </div>
+
+  <!-- 18 · COST -->
+  <div class="slide">
+    <div class="kicker">What it costs</div>
+    <h2>Append-only,<br>for a reason</h2>
+    <div style="display: flex; align-items: flex-end; gap: 0.9rem; margin-top: 2rem;">
+      <div style="text-align: center;"><div style="width: 34px; height: 47px; background: oklch(61.6% 0.1696 251.2 / 35%); border-radius: 4px 4px 0 0;"></div><div style="font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.4rem;">Turn 1</div></div>
+      <div style="text-align: center;"><div style="width: 34px; height: 65px; background: oklch(61.6% 0.1696 251.2 / 48%); border-radius: 4px 4px 0 0;"></div><div style="font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.4rem;">Turn 3</div></div>
+      <div style="text-align: center;"><div style="width: 34px; height: 84px; background: oklch(61.6% 0.1696 251.2 / 62%); border-radius: 4px 4px 0 0;"></div><div style="font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.4rem;">Turn 5</div></div>
+      <div style="text-align: center;"><div style="width: 34px; height: 103px; background: oklch(61.6% 0.1696 251.2 / 76%); border-radius: 4px 4px 0 0;"></div><div style="font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.4rem;">Turn 7</div></div>
+      <div style="text-align: center;"><div style="width: 34px; height: 121px; background: oklch(61.6% 0.1696 251.2 / 88%); border-radius: 4px 4px 0 0;"></div><div style="font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.4rem;">Turn 9</div></div>
+      <div style="text-align: center;"><div style="width: 34px; height: 140px; background: var(--accent); border-radius: 4px 4px 0 0;"></div><div style="font-size: 0.7rem; color: var(--accent); font-weight: 700; margin-top: 0.4rem;">Turn 12</div></div>
+      <div style="margin-left: 1.5rem; padding-left: 1.5rem; border-left: 1px solid var(--border);">
+        <div style="font-size: 0.95rem; color: var(--fg-muted);">Final context: <strong style="color: var(--fg);">7,500 tok</strong></div>
+        <div style="font-size: 0.95rem; color: var(--fg-muted); margin-top: 0.3rem;">Total billed: <strong style="color: var(--wu-color-orange-deep);">57,000 tok</strong></div>
+      </div>
+    </div>
+    <p style="margin-top: 1.5rem;">Each bar is one call's full context &mdash; every call resends everything
+      before it, not just what's new. That's why cost is closer to quadratic than linear.</p>
+    <p style="margin-top: 0.75rem;">Why append-only? Editing an earlier turn breaks the
+      <em title="The leading portion of the input that stays identical between calls.">prefix</em> match caching depends on. Appending is the only move that's always cache-safe.</p>
+  </div>
+
+  <!-- 18b · CACHING MECHANICS -->
+  <div class="slide">
+    <div class="kicker">Not a harness feature &mdash; a provider one</div>
+    <h2>Where does the cache<br>actually live?</h2>
+    <div style="display: flex; gap: 1.5rem; align-items: flex-start; width: 100%; max-width: 1060px; margin-top: 1.75rem;">
+      <div class="box" style="flex: 1; min-width: 0; max-width: none; margin-top: 0;">
+        <div class="layer"><div class="layer-label" style="width: 84px;">Where</div><div class="layer-desc">On the provider's own servers &mdash; not in your harness, not on disk anywhere you control.</div></div>
+        <div class="layer"><div class="layer-label" style="width: 84px;">What</div><div class="layer-desc">The model's processed internal representation of a token <em>prefix</em>, keyed by a hash of its exact content.</div></div>
+        <div class="layer"><div class="layer-label" style="width: 84px;">How long</div><div class="layer-desc">Anthropic: 5 minutes by default, reset on every hit &mdash; a 1-hour option exists at higher write cost.</div></div>
+        <div class="layer"><div class="layer-label" style="width: 84px;">The price</div><div class="layer-desc">A cache write costs more than normal (1.25&times;). A cache hit costs far less (0.1&times; &mdash; a 90% discount).</div></div>
+      </div>
+      <div style="flex: 0 0 330px;">
+        <div style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem; color: var(--accent);">What a prefix looks like</div>
+        <pre style="font-size: 0.78rem; margin-top: 0; padding: 1rem 1.1rem;">system  You are a coding agent&hellip;
+tools   search_code, read_file,
+        edit_file, run_tests
+user    Refactor getPokemonByName
+asst    &rarr; search_code(&hellip;)
+tool    found pokedex.ts
+<span style="color: var(--accent); font-weight: 700;">&#9472;&#9472; cache breakpoint &#9472;&#9472;</span>
+<span style="color: var(--wu-color-orange-deep); font-weight: 700;">asst    &larr; new, full price</span></pre>
+        <div style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; color: var(--fg-sub); margin-top: 0.7rem;">key = hash(everything above the line)</div>
+        <div style="font-size: 0.85rem; color: var(--fg-muted); margin-top: 0.3rem; line-height: 1.45;">Change one character up there &mdash; a timestamp, a different model &mdash; and it's a new hash: full miss.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 18b2 · CACHING EXAMPLE -->
+  <div class="slide">
+    <div class="kicker">A concrete example</div>
+    <h2>What's inside<br>one single call</h2>
+    <p style="margin-top: 1rem;">One turn = one pass through the loop = one call to the model. Here's
+      everything inside the <strong>4th</strong> call, piece by piece:</p>
+    <div style="display: flex; width: 100%; max-width: 720px; margin-top: 1.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--border);">
+      <div style="flex: 1; background: oklch(61.6% 0.1696 251.2 / 14%); padding: 0.9rem 1rem; font-size: 0.85rem; color: var(--accent); font-weight: 700;">Tools &middot; 500</div>
+      <div style="flex: 4; background: oklch(61.6% 0.1696 251.2 / 22%); padding: 0.9rem 1rem; font-size: 0.8rem; color: var(--accent); font-weight: 700;">System prompt &middot; 2,000 tok</div>
+      <div style="flex: 3; background: oklch(61.6% 0.1696 251.2 / 30%); padding: 0.9rem 1rem; font-size: 0.8rem; color: var(--accent); font-weight: 700;">Already sent in turns 1&ndash;3 &middot; 1,500</div>
+      <div style="flex: 0.8; background: var(--wu-color-orange-deep); padding: 0.9rem 0.6rem; font-size: 0.75rem; color: #fff; font-weight: 700;">New this turn &middot; 300</div>
+    </div>
+    <div style="display: flex; width: 100%; max-width: 720px; margin-top: 0.6rem;">
+      <div style="flex: 8; font-size: 0.8rem; color: var(--fg-muted);">&larr;&nbsp; cached: written once, then read at 0.1&times; while the prefix stays identical &nbsp;&rarr;</div>
+      <div style="flex: 0.8; font-size: 0.75rem; color: var(--wu-color-orange-deep); font-weight: 700;">full price</div>
+    </div>
+    <p class="note">Everything except the last sliver is byte-identical to what call 3 already sent &mdash; that part is read from cache at a discount, as long as the entry is still alive. Only the new sliver costs full price.</p>
+  </div>
+
+  <!-- 18c · WHY COMPACTION -->
+  <div class="slide">
+    <div class="kicker">Why, not how &mdash; the how is next session</div>
+    <h2>Caching makes tokens cheaper.<br>Compaction makes <span class="accent">fewer of them exist.</span></h2>
+    <div class="box">
+      <div class="layer"><div class="layer-label">Still a bill</div><div class="layer-desc">A cache hit is 90% off, not free. A conversation that never stops growing still grows its bill &mdash; just more slowly.</div></div>
+      <div class="layer"><div class="layer-label">Hard ceiling</div><div class="layer-desc">Every model has a maximum context size. Caching is a pricing trick &mdash; it does nothing to stop history from eventually hitting that wall.</div></div>
+      <div class="layer"><div class="layer-label">Quality, not just cost</div><div class="layer-desc">Models get measurably worse at finding what matters buried in a very long context ("lost in the middle") &mdash; independent of whether it's affordable.</div></div>
+    </div>
+    <p class="note">Caching is a cheaper storage tier. Compaction is deleting what you don't need. Different jobs &mdash; you want both.</p>
+  </div>
+
+  <!-- 18d · CACHE + COMPACTION -->
+  <div class="slide center">
+    <div class="kicker">The two are not independent</div>
+    <h1>Compaction always<br>costs <span class="accent">one cache miss.</span></h1>
+    <p style="margin-top: 1.5rem;">Compacting rewrites the prefix, so the cache hash no longer matches &mdash; the very next call is a guaranteed miss, billed at full write price.</p>
+    <div class="quote">But it's a one-time reset, not a permanent loss. The new, shorter history becomes a fresh prefix &mdash; caching resumes normally from there. That's exactly why compaction is rare and deliberate: do it constantly, and you're paying the miss tax on every call.</div>
+  </div>
+
+  <!-- 16 · TWO RETRIES -->
+  <div class="slide">
+    <div class="kicker">More calls, more 429s</div>
+    <h2>Two kinds of retry</h2>
+    <div class="box">
+      <div class="layer"><div class="layer-label">Transport &middot; provider.ts</div><div class="layer-desc">429, 5xx, dropped connection, timeout. The harness decides. Backoff, Retry-After, jitter. <strong>The model never sees it.</strong></div></div>
+      <div class="layer"><div class="layer-label">Semantic &middot; the loop</div><div class="layer-desc">A tool returned <code>{ ok: false }</code>. The model decides: try again, or take another route. Session 6.</div></div>
+    </div>
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; align-items: center;">
+      <div class="chip read">search_code</div>
+      <span style="color: var(--fg-muted); font-size: 0.85rem;">safe to retry</span>
+      <span style="color: var(--border); font-size: 1.2rem;">&middot;</span>
+      <div class="chip blocked">send_email / create_ticket</div>
+      <span style="color: var(--wu-color-red-deep); font-size: 0.85rem; font-weight: 700;">not safe &mdash; can double-send</span>
+    </div>
+    <p class="note">Semantic retries assume the tool is idempotent. Not all of them are.</p>
+    <p class="note">A rate limit carries nothing the model can act on. A failed
+      tool carries exactly what it needs. Different layers, on purpose.</p>
+  </div>
+
+  <!-- HOMEWORK 2 -->
+  <div class="slide">
+    <div class="kicker">Homework &middot; week 2</div>
+    <h2>The loop,<br>and your first score</h2>
+    <pre>pnpm golden --runs=3   # 10 fixed questions, averaged</pre>
+    <p>This is your baseline. Print tokens and cost on every run, from
+      <code>usage</code> &mdash; not an estimate.</p>
+    <p class="note">The model isn't deterministic. One run is one sample; compare
+      averages.</p>
+  </div>
+
+  <!-- LIVE POLL -->
+  <div class="slide">
+    <div class="kicker">Live poll</div>
+    <h2>Scan, or enter the PIN</h2>
+    <div style="display: flex; align-items: center; gap: 3.5rem; margin-top: 2rem;">
+      <div style="background: #fff; padding: 0.6rem; border-radius: 14px; border: 1px solid var(--border); box-shadow: 0 1px 2px oklch(0% 0 0 / 4%), 0 16px 36px oklch(0% 0 0 / 6%); line-height: 0; flex-shrink: 0;">
+        <svg viewBox="0 0 33 33" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR code linking to questionpro.io?pin=2234" shape-rendering="crispEdges"><rect width="33" height="33" fill="#fff"/><path d="M2 2h7v1h-7zM11 2h2v1h-2zM16 2h1v1h-1zM19 2h1v1h-1zM21 2h2v1h-2zM24 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM14 3h2v1h-2zM20 3h3v1h-3zM24 3h1v1h-1zM30 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h1v1h-1zM17 4h1v1h-1zM21 4h1v1h-1zM24 4h1v1h-1zM26 4h3v1h-3zM30 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM24 5h1v1h-1zM26 5h3v1h-3zM30 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM14 6h2v1h-2zM18 6h1v1h-1zM21 6h1v1h-1zM24 6h1v1h-1zM26 6h3v1h-3zM30 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM16 7h4v1h-4zM21 7h2v1h-2zM24 7h1v1h-1zM30 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h7v1h-7zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM2 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM18 10h2v1h-2zM21 10h2v1h-2zM26 10h1v1h-1zM29 10h1v1h-1zM3 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h2v1h-2zM15 11h1v1h-1zM17 11h2v1h-2zM22 11h1v1h-1zM24 11h1v1h-1zM27 11h1v1h-1zM30 11h1v1h-1zM2 12h2v1h-2zM5 12h4v1h-4zM13 12h2v1h-2zM16 12h3v1h-3zM20 12h1v1h-1zM22 12h4v1h-4zM28 12h3v1h-3zM2 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM13 13h4v1h-4zM18 13h3v1h-3zM22 13h2v1h-2zM25 13h1v1h-1zM29 13h1v1h-1zM4 14h2v1h-2zM7 14h2v1h-2zM10 14h2v1h-2zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h5v1h-5zM27 14h1v1h-1zM29 14h2v1h-2zM4 15h1v1h-1zM9 15h6v1h-6zM16 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM2 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM10 16h3v1h-3zM15 16h1v1h-1zM19 16h1v1h-1zM25 16h3v1h-3zM29 16h2v1h-2zM2 17h1v1h-1zM5 17h2v1h-2zM9 17h1v1h-1zM12 17h2v1h-2zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM3 18h1v1h-1zM5 18h9v1h-9zM18 18h7v1h-7zM27 18h1v1h-1zM29 18h2v1h-2zM3 19h1v1h-1zM5 19h2v1h-2zM10 19h6v1h-6zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM27 19h2v1h-2zM30 19h1v1h-1zM2 20h1v1h-1zM7 20h3v1h-3zM12 20h1v1h-1zM14 20h1v1h-1zM16 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM29 20h2v1h-2zM3 21h5v1h-5zM9 21h1v1h-1zM11 21h2v1h-2zM15 21h2v1h-2zM18 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM7 22h2v1h-2zM11 22h4v1h-4zM16 22h5v1h-5zM22 22h5v1h-5zM10 23h2v1h-2zM13 23h2v1h-2zM16 23h2v1h-2zM19 23h2v1h-2zM22 23h1v1h-1zM26 23h1v1h-1zM28 23h3v1h-3zM2 24h7v1h-7zM13 24h3v1h-3zM18 24h5v1h-5zM24 24h1v1h-1zM26 24h2v1h-2zM29 24h2v1h-2zM2 25h1v1h-1zM8 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM17 25h3v1h-3zM22 25h1v1h-1zM26 25h2v1h-2zM30 25h1v1h-1zM2 26h1v1h-1zM4 26h3v1h-3zM8 26h1v1h-1zM10 26h3v1h-3zM19 26h2v1h-2zM22 26h5v1h-5zM29 26h1v1h-1zM2 27h1v1h-1zM4 27h3v1h-3zM8 27h1v1h-1zM11 27h2v1h-2zM14 27h2v1h-2zM19 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM2 28h1v1h-1zM4 28h3v1h-3zM8 28h1v1h-1zM10 28h2v1h-2zM15 28h1v1h-1zM19 28h2v1h-2zM22 28h1v1h-1zM25 28h3v1h-3zM30 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM12 29h1v1h-1zM15 29h1v1h-1zM19 29h1v1h-1zM22 29h1v1h-1zM24 29h1v1h-1zM29 29h1v1h-1zM2 30h7v1h-7zM10 30h1v1h-1zM13 30h1v1h-1zM15 30h2v1h-2zM19 30h4v1h-4zM26 30h2v1h-2zM29 30h2v1h-2z" fill="#000"/></svg>
+      </div>
+      <div>
+        <p style="max-width: 460px; margin: 0;">Go to <a href="https://questionpro.io?pin=2234" style="color: var(--accent); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--accent);">questionpro.io</a> and enter the PIN:</p>
+        <div style="display: flex; gap: 0.8rem; margin-top: 1.5rem;">
+        <div style="width: 72px; height: 88px; display: flex; align-items: center; justify-content: center; background: #f5f8ff; border: 1px solid #e3eaf6; border-bottom: 4px solid var(--accent); border-radius: 14px; font-size: 2.8rem; font-weight: 700; color: #0b1a3d;">2</div>
+        <div style="width: 72px; height: 88px; display: flex; align-items: center; justify-content: center; background: #f5f8ff; border: 1px solid #e3eaf6; border-bottom: 4px solid var(--accent); border-radius: 14px; font-size: 2.8rem; font-weight: 700; color: #0b1a3d;">2</div>
+        <div style="width: 72px; height: 88px; display: flex; align-items: center; justify-content: center; background: #f5f8ff; border: 1px solid #e3eaf6; border-bottom: 4px solid var(--accent); border-radius: 14px; font-size: 2.8rem; font-weight: 700; color: #0b1a3d;">3</div>
+        <div style="width: 72px; height: 88px; display: flex; align-items: center; justify-content: center; background: #f5f8ff; border: 1px solid #e3eaf6; border-bottom: 4px solid var(--accent); border-radius: 14px; font-size: 2.8rem; font-weight: 700; color: #0b1a3d;">4</div>
+        </div>
+        <p class="muted" style="font-size: 0.95rem; margin-top: 1.5rem;">AI Native Session &mdash; Session 11 (Agent Loop &amp; Caching)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-bar" id="progress"></div>
+  <nav class="slide-nav">
+    <button id="prev" aria-label="Previous slide">&larr;</button>
+    <button id="next" aria-label="Next slide">&rarr;</button>
+  </nav>
+  <div class="slide-counter" id="counter"></div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll(".slide");
+const progress = document.getElementById("progress");
+const counter = document.getElementById("counter");
+
+let current = 0;
+
+function show(index) {
+  slides[current].classList.remove("active");
+  current = (index + slides.length) % slides.length;
+  slides[current].classList.add("active");
+  counter.textContent = `${current + 1} / ${slides.length}`;
+  progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+}
+
+document
+  .getElementById("next")
+  .addEventListener("click", () => show(current + 1));
+document
+  .getElementById("prev")
+  .addEventListener("click", () => show(current - 1));
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight" || event.key === " ") {
+    event.preventDefault();
+    show(current + 1);
+  }
+  if (event.key === "ArrowLeft") show(current - 1);
+  if (event.key === "Home") show(0);
+  if (event.key === "End") show(slides.length - 1);
+});
+
+show(0);
+</script>
+</body>
+</html>
