@@ -501,13 +501,25 @@
 
   .branch-row { display: flex; justify-content: center; gap: 2rem; margin: 0.4rem 0; }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 08</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session07/index.html" aria-label="Previous session: 07">Previous session</a>
+    <a href="../session09/index.html" aria-label="Next session: 09">Next session</a>
+  </nav>
+</header>
 
-<div class="slides">
+<div class="slides" id="lesson" role="main" aria-label="Session 08 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide title-slide active">
+  <div class="slide title-slide active" id="rag-hands-on" role="region" aria-label="RAG, Hands-On." tabindex="-1">
     <div class="kicker">Live Demo &middot; 45 Minutes</div>
     <h1>RAG,<br><span class="accent">Hands-On.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">Turning retrieval into trustworthy answers — with real code, and real failure modes.</p>
@@ -518,7 +530,7 @@
   </div>
 
   <!-- 02 · AGENDA -->
-  <div class="slide">
+  <div class="slide" id="six-stops-one-working-chatbot" role="region" aria-label="Six stops, one working chatbot." tabindex="-1" inert>
     <div class="kicker">What we'll cover</div>
     <h2>Six stops, <span class="accent">one working chatbot.</span></h2>
     <ul class="agenda">
@@ -532,7 +544,7 @@
   </div>
 
   <!-- 03 · RECAP -->
-  <div class="slide">
+  <div class="slide" id="meaning-search-now-an-answer" role="region" aria-label="Meaning → Search → Now, an answer." tabindex="-1" inert>
     <div class="kicker">Where we left off</div>
     <h2>Meaning &rarr; Search &rarr; <span class="accent">Now, an answer.</span></h2>
     <div class="stack-flow">
@@ -546,7 +558,7 @@
   </div>
 
   <!-- 04 · THE PROBLEM -->
-  <div class="slide">
+  <div class="slide" id="closed-book-exam-vs-open-book-exam" role="region" aria-label="Closed-book exam vs. open-book exam." tabindex="-1" inert>
     <div class="kicker">The problem RAG solves</div>
     <h2>Closed-book exam <span class="accent">vs.</span> open-book exam.</h2>
     <div class="col-grid">
@@ -562,7 +574,7 @@
   </div>
 
   <!-- 04b · WHY RAG, PRECISELY -->
-  <div class="slide">
+  <div class="slide" id="four-real-reasons-not-just-one" role="region" aria-label="Four real reasons — not just one." tabindex="-1" inert>
     <div class="kicker">Why RAG, precisely</div>
     <h2>Four real reasons — <span class="accent">not just one.</span></h2>
     <div class="col-grid">
@@ -590,7 +602,7 @@
   </div>
 
   <!-- 05 · TWO OPTIONS -->
-  <div class="slide">
+  <div class="slide" id="retrain-the-model-or-just-look-things-up" role="region" aria-label="Retrain the model, or just look things up." tabindex="-1" inert>
     <div class="kicker">Two ways to give a model new knowledge</div>
     <h2>Retrain the model, <span class="accent">or just look things up.</span></h2>
     <div class="col-grid">
@@ -606,7 +618,7 @@
   </div>
 
   <!-- 05b · WHAT R-A-G ACTUALLY STANDS FOR -->
-  <div class="slide">
+  <div class="slide" id="r-a-g-three-words-one-pipeline" role="region" aria-label="R-A-G: three words, one pipeline." tabindex="-1" inert>
     <div class="kicker">First, the name itself</div>
     <h2>R-A-G: <span class="accent">three words, one pipeline.</span></h2>
     <div class="col-grid">
@@ -627,7 +639,7 @@
   </div>
 
   <!-- 06 · THE RAG LOOP -->
-  <div class="slide">
+  <div class="slide" id="retrieval-gathers-evidence-the-llm-writes-the-answer" role="region" aria-label="Retrieval gathers evidence. The LLM writes the answer." tabindex="-1" inert>
     <div class="kicker">The whole pipeline, end to end</div>
     <h2>Retrieval gathers evidence.<br>The LLM <span class="accent">writes the answer.</span></h2>
     <div class="stack-flow">
@@ -649,7 +661,7 @@
   </div>
 
   <!-- 07 · HONESTY BEAT -->
-  <div class="slide">
+  <div class="slide" id="we-added-real-documents-so-it-can-t-make-things-up-anymore" role="region" aria-label="&quot;We added real documents, so it can't make things up anymore.&quot;" tabindex="-1" inert>
     <div class="kicker">A common assumption, worth correcting early</div>
     <h2>"We added real documents, so it can't <span class="accent">make things up anymore."</span></h2>
     <p style="margin-top: 1.25rem; max-width: 680px;">Not quite — two separate things have to go right, not one:</p>
@@ -661,13 +673,13 @@
   </div>
 
   <!-- DIVIDER · LIVE DEMO -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="live-demo" role="region" aria-label="Live Demo" tabindex="-1" inert>
     <h2>Live Demo</h2>
     <div class="sub">From search results to a real, trustworthy answer</div>
   </div>
 
   <!-- 09 · DEMO STEP 1 -->
-  <div class="slide">
+  <div class="slide" id="same-collection-new-capability" role="region" aria-label="Same collection. New capability." tabindex="-1" inert>
     <div class="kicker">Step 1 — Reconnect to our existing collection</div>
     <h2>Same collection. <span class="accent">New capability.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">import</span> { createClient, runStep, printResults, COLLECTION_NAME } <span class="tok-kw">from</span> <span class="tok-str">"./chroma-client.js"</span>;
@@ -683,7 +695,7 @@
   </div>
 
   <!-- 10 · DEMO STEP 2 -->
-  <div class="slide">
+  <div class="slide" id="this-part-is-entirely-vector-databases" role="region" aria-label="This part is entirely Vector Databases." tabindex="-1" inert>
     <div class="kicker">Step 2 — Retrieve, exactly like last time</div>
     <h2>This part is entirely <span class="accent">Vector Databases.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">const</span> QUERY_TEXT = process.argv.<span class="tok-fn">slice</span>(<span class="tok-num">2</span>).<span class="tok-fn">join</span>(<span class="tok-str">" "</span>)
@@ -699,7 +711,7 @@
   </div>
 
   <!-- 11 · DEMO STEP 3 -->
-  <div class="slide">
+  <div class="slide" id="one-sentence-doing-all-the-work" role="region" aria-label="One sentence doing all the work." tabindex="-1" inert>
     <div class="kicker">Step 3 — the one new idea</div>
     <h2>One sentence doing <span class="accent">all the work.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">const</span> context = (results.<span class="tok-fn">rows</span>()[<span class="tok-num">0</span>] ?? [])
@@ -711,7 +723,7 @@
   </div>
 
   <!-- 12 · DEMO STEP 4 -->
-  <div class="slide">
+  <div class="slide" id="a-real-fluent-answer-grounded-in-what-we-retrieved" role="region" aria-label="A real, fluent answer — grounded in what we retrieved." tabindex="-1" inert>
     <div class="kicker">Step 4 — generation</div>
     <h2>A real, fluent answer — <span class="accent">grounded in what we retrieved.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">const</span> ai = <span class="tok-fn">createGeminiClient</span>();
@@ -723,13 +735,13 @@
   </div>
 
   <!-- DIVIDER · LEVELING UP -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="leveling-up" role="region" aria-label="Leveling Up" tabindex="-1" inert>
     <h2>Leveling Up</h2>
     <div class="sub">Two real upgrades, added live</div>
   </div>
 
   <!-- 13c · QUERY REWRITING + RERANKING, EXPLAINED -->
-  <div class="slide">
+  <div class="slide" id="fix-the-question-fix-the-results" role="region" aria-label="Fix the question. Fix the results." tabindex="-1" inert>
     <div class="kicker">Two upgrades, two different jobs</div>
     <h2>Fix the question. <span class="accent">Fix the results.</span></h2>
     <div class="col-grid">
@@ -758,7 +770,7 @@
   </div>
 
   <!-- 14 · QUERY REWRITING -->
-  <div class="slide">
+  <div class="slide" id="query-rewriting" role="region" aria-label="Query Rewriting." tabindex="-1" inert>
     <div class="kicker">Upgrade 1 — fix the question before searching</div>
     <h2>Query <span class="accent">Rewriting.</span></h2>
     <p style="margin-top: 1rem; max-width: 660px;">Real questions are messy — typos, missing context, ambiguous phrasing. Ask an LLM to clean it up before it ever reaches the vector DB.</p>
@@ -774,7 +786,7 @@
   </div>
 
   <!-- 15 · RERANKING -->
-  <div class="slide">
+  <div class="slide" id="reranking" role="region" aria-label="Reranking." tabindex="-1" inert>
     <div class="kicker">Upgrade 2 — fix the results before generating</div>
     <h2>Reranking.</h2>
     <p style="margin-top: 1rem; max-width: 660px;">Retrieve more candidates than you need, cheaply. Then have a second pass reorder them by true relevance before they reach the final prompt.</p>
@@ -798,7 +810,7 @@
   </div>
 
   <!-- 16 · BREAK IT ON PURPOSE -->
-  <div class="slide">
+  <div class="slide" id="same-off-topic-question-with-and-without-the-guardrail" role="region" aria-label="Same off-topic question, with and without the guardrail." tabindex="-1" inert>
     <div class="kicker">Now, on purpose — watch it fail correctly</div>
     <h2>Same off-topic question,<br><span class="accent">with and without the guardrail.</span></h2>
     <div class="flow" style="margin-top: 1.75rem;">
@@ -816,7 +828,7 @@
   </div>
 
   <!-- 17 · OPTIONAL STRETCH: RETRY LOOP -->
-  <div class="slide">
+  <div class="slide" id="what-if-it-just-tried-again" role="region" aria-label="What if it just tried again?" tabindex="-1" inert>
     <div class="kicker">If there's time — a taste of what's next</div>
     <h2>What if it just <span class="accent">tried again?</span></h2>
     <div class="train-steps">
@@ -832,13 +844,13 @@
   </div>
 
   <!-- DIVIDER · THE WIDER LANDSCAPE -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="the-wider-landscape" role="region" aria-label="The Wider Landscape" tabindex="-1" inert>
     <h2>The Wider Landscape</h2>
     <div class="sub">Today's two, and the rest of the field</div>
   </div>
 
   <!-- 19 · LANDSCAPE GRID -->
-  <div class="slide">
+  <div class="slide" id="we-built-2-of-these-today" role="region" aria-label="We built 2 of these today." tabindex="-1" inert>
     <div class="kicker">Today's two, and the rest of the field</div>
     <h2>We built 2 of these <span class="accent">today.</span></h2>
     <div class="tools-row" style="margin-top: 2rem;">
@@ -857,34 +869,34 @@
   </div>
 
   <!-- 20 · BENCHMARK STAT -->
-  <div class="slide center">
+  <div class="slide center" id="44-63" role="region" aria-label="44% → 63%" tabindex="-1" inert>
     <div class="kicker">Does any of this actually matter?</div>
     <h1>44% <span class="accent">&rarr;</span> 63%</h1>
     <p style="margin-top: 2rem; max-width: 620px;">A 2024 benchmark found plain retrieval-only RAG answers 44% of factual questions correctly. Advanced techniques — like the two we just added — push that to roughly 63%. A real, measurable gap.</p>
   </div>
 
   <!-- DIVIDER · WHY IT MATTERS -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="why-it-matters" role="region" aria-label="Why It Matters" tabindex="-1" inert>
     <h2>Why It Matters</h2>
     <div class="sub">Where this actually lives</div>
   </div>
 
   <!-- 22 · WHY IT MATTERS -->
-  <div class="slide">
+  <div class="slide" id="this-is-chat-with-your-docs" role="region" aria-label="This is &quot;chat with your docs.&quot;" tabindex="-1" inert>
     <div class="kicker">Where this actually lives</div>
     <h2>This is <span class="accent">"chat with your docs."</span></h2>
     <p style="margin-top: 1.25rem; max-width: 680px;">Customer support bots, internal company wikis turned into assistants, code-search tools like Copilot's codebase chat — all running this exact loop.</p>
   </div>
 
   <!-- 23 · CLOSING LINE -->
-  <div class="slide center">
+  <div class="slide center" id="numbers-search-now-trustworthy-answers" role="region" aria-label="Numbers. Search. Now, trustworthy answers." tabindex="-1" inert>
     <div class="kicker">Three ideas, one pipeline</div>
     <h1 style="max-width: 780px; margin: 0 auto;">Numbers. <span class="accent">Search.</span> Now, trustworthy answers.</h1>
     <p style="margin-top: 2rem; max-width: 660px;">Embeddings: turn meaning into numbers. Vector Databases: search a billion of them in milliseconds. RAG: hand what you find to a model, and get an answer back you can actually trust — because you told it what to do when it doesn't know.</p>
   </div>
 
   <!-- 24 · THANK YOU / Q&A -->
-  <div class="slide center">
+  <div class="slide center" id="thank-you" role="region" aria-label="Thank you." tabindex="-1" inert>
     <div class="kicker">Questions?</div>
     <h1>Thank you.</h1>
     <p style="margin-top: 2rem; max-width: 560px;">Retrieve. Augment. Generate. That's the whole shape of it.</p>
@@ -909,12 +921,14 @@
     slides[cur].classList.remove('active');
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
     counter.textContent = `${cur + 1} / ${slides.length}`;
     progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
   }
   document.getElementById('next').onclick = () => show(cur + 1);
   document.getElementById('prev').onclick  = () => show(cur - 1);
   document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft') show(cur - 1);
     if (e.key === 'Home') show(0);

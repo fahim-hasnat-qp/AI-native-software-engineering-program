@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The QuestionPro AI-native software engineering program. Explore lessons on AI workflows, application architecture, retrieval and agent engineering." />
+  <title>AI-native engineering — QuestionPro learning library</title>
+  <link rel="stylesheet" href="assets/course.css" />
+  <script src="assets/course.js" defer></script>
+</head>
+<body class="course-catalogue">
+  <a class="course-skip" href="#syllabus">Skip to sessions</a>
+  <header class="course-header">
+    <a class="course-wordmark" href="index.html"><img src="assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+    <span class="course-current">Learning library</span>
+    <nav aria-label="Course">
+      <a href="#syllabus">All sessions</a>
+      <a href="session01/index.html">Start learning</a>
+    </nav>
+  </header>
+  <main>
+    <section class="course-intro" aria-labelledby="course-title">
+      <h1 id="course-title">AI-native engineering</h1>
+      <div>
+        <p>The QuestionPro AI-native software engineering program: from understanding models to building the systems around them.</p>
+        <a class="course-action" href="session01/index.html">Begin with Session 01</a>
+      </div>
+    </section>
+    <section class="syllabus" id="syllabus" aria-labelledby="syllabus-title">
+      <div class="syllabus-heading">
+        <h2 id="syllabus-title">Course syllabus</h2>
+        <p id="session-count" role="status">12 sessions + 1 supplement</p>
+      </div>
+      <div id="search-tools" hidden>
+        <label for="course-search">Search sessions and topics</label>
+        <div class="search-row">
+          <input id="course-search" type="search" placeholder="Try embeddings, hooks or security" aria-controls="session-list" />
+          <button id="search-clear" type="button" hidden>Clear search</button>
+        </div>
+      </div>
+      <ol class="session-list" id="session-list">
+        <li class="session-entry">
+          <p class="session-number">Session 01</p>
+          <div class="session-body">
+            <h3><a href="session01/index.html">Engineering in the AI era</a></h3>
+            <p>Follow a prompt through tokens, model training, attention, context and the agent harness that turns a model into a tool.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 01 topics">
+            <a href="session01/index.html#tokens-are-the-currency-of-llms">Tokens</a>
+            <a href="session01/index.html#fixed-window-everything-competes-for-space">Context windows</a>
+            <a href="session01/index.html#what-is-an-agent-harness">Agent harnesses</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 02</p>
+          <div class="session-body">
+            <h3><a href="session02/index.html">Repeatable AI workflows</a></h3>
+            <p>Encode engineering workflows with commands, skills and hooks: debugging, planning, tests, documentation and code review.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 02 topics">
+            <a href="session02/index.html#commands-skills-hooks">Commands, skills &amp; hooks</a>
+            <a href="session02/index.html#root-cause-it-fix-it-verify-it">Debugging</a>
+            <a href="session02/index.html#hooks-the-enforcement-layer">Workflow enforcement</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 03</p>
+          <div class="session-body">
+            <h3><a href="session03/index.html">Learning with AI</a></h3>
+            <p>Use AI as a tutor without skipping the struggle. Practice DSA, system design, databases and continuous learning.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 03 topics">
+            <a href="session03/index.html#02-using-ai-to-learn-dsa">DSA practice</a>
+            <a href="session03/index.html#03-using-ai-to-learn-system-design">System design</a>
+            <a href="session03/index.html#06-building-a-continuous-learning-system">Continuous learning</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 04</p>
+          <div class="session-body">
+            <h3><a href="session04/index.html">AI applications &amp; architecture</a></h3>
+            <p>Distinguish predictive, generative, agentic and embedded AI, then trace the application stack and its retrieval layer.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 04 topics">
+            <a href="session04/index.html#predictive-generative-agentic-embedded">Application types</a>
+            <a href="session04/index.html#ai-application-architecture">Architecture</a>
+            <a href="session04/index.html#inside-the-vector-database">Vector databases</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Supplement</p>
+          <div class="session-body">
+            <h3><a href="backend-llm-integration/index.html">Backend LLM integration</a></h3>
+            <p>Compare direct API integration and RAG for backend systems, explore model capabilities, and follow tokenization, training, vectors and token limits.</p>
+          </div>
+          <nav class="session-topics" aria-label="Backend LLM integration topics">
+            <a href="backend-llm-integration/index.html#direct-api-integration">Direct API integration</a>
+            <a href="backend-llm-integration/index.html#rag-with-backend">RAG with backend</a>
+            <a href="backend-llm-integration/index.html#tokens-and-limitations">Token limits</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 05</p>
+          <div class="session-body">
+            <h3><a href="session05/index.html">LLM APIs &amp; Cursor architecture</a></h3>
+            <p>Work with token costs, sampling parameters and tool calling, then look inside Cursor’s context, indexing and agent loop.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 05 topics">
+            <a href="session05/index.html#mastering-api-parameters">API parameters</a>
+            <a href="session05/index.html#function-calling-tool-use">Tool calling</a>
+            <a href="session05/index.html#system-design-of-cursor">Inside Cursor</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 06</p>
+          <div class="session-body">
+            <h3><a href="session06/index.html">Embeddings, demystified</a></h3>
+            <p>Build intuition for meaning as vectors, cosine similarity and how embeddings are learned from context.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 06 topics">
+            <a href="session06/index.html#the-intuition">Embedding intuition</a>
+            <a href="session06/index.html#cosine-similarity-the-angle-not-the-ruler">Cosine similarity</a>
+            <a href="session06/index.html#how-it-s-learned">Learning embeddings</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 07</p>
+          <div class="session-body">
+            <h3><a href="session07/index.html">Vector databases, hands-on</a></h3>
+            <p>Explore approximate nearest neighbors and HNSW, compare database options and query documents with Chroma.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 07 topics">
+            <a href="session07/index.html#vector-indexes-ann">Indexes &amp; ANN</a>
+            <a href="session07/index.html#the-landscape">Database landscape</a>
+            <a href="session07/index.html#live-demo">Chroma demo</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 08</p>
+          <div class="session-body">
+            <h3><a href="session08/index.html">RAG, hands-on</a></h3>
+            <p>Connect retrieval to generation in a document chatbot, then improve the pipeline with query rewriting and reranking.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 08 topics">
+            <a href="session08/index.html#r-a-g-three-words-one-pipeline">Retrieval pipeline</a>
+            <a href="session08/index.html#live-demo">Chatbot demo</a>
+            <a href="session08/index.html#leveling-up">Improving retrieval</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 09</p>
+          <div class="session-body">
+            <h3><a href="session09/index.html">Advanced RAG</a></h3>
+            <p>Address three retrieval failures with hybrid search, hypothetical document embeddings and corrective RAG.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 09 topics">
+            <a href="session09/index.html#hybrid-rag">Hybrid search</a>
+            <a href="session09/index.html#hyde">HyDE</a>
+            <a href="session09/index.html#corrective-rag">Corrective RAG</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 10</p>
+          <div class="session-body">
+            <h3><a href="session10/index.html">Agent engineering foundations</a></h3>
+            <p>Build a runtime around a provider, system prompt and tool calls, with an explicit boundary between requests and execution.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 10 topics">
+            <a href="session10/index.html#the-provider">Provider</a>
+            <a href="session10/index.html#the-system-prompt-is-the-product">System prompt</a>
+            <a href="session10/index.html#model-requests-application-decides">Execution boundary</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 11</p>
+          <div class="session-body">
+            <h3><a href="session11/index.html">The loop, the bill &amp; retries</a></h3>
+            <p>Trace the agent loop, bound its work, distinguish history from state and understand caching, compaction and retry behavior.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 11 topics">
+            <a href="session11/index.html#the-agent-loop">Agent loop</a>
+            <a href="session11/index.html#where-does-the-cache-actually-live">Caching</a>
+            <a href="session11/index.html#two-kinds-of-retry">Retries</a>
+          </nav>
+        </li>
+        <li class="session-entry">
+          <p class="session-number">Session 12</p>
+          <div class="session-body">
+            <h3><a href="session12/index.html">The whole harness</a></h3>
+            <p>Bring the harness together: security, prompt injection, policy hooks, MCP, ACP, A2A and the complete workshop homework.</p>
+          </div>
+          <nav class="session-topics" aria-label="Session 12 topics">
+            <a href="session12/index.html#b2">Security</a>
+            <a href="session12/index.html#b3">MCP, ACP &amp; A2A</a>
+            <a href="session12/index.html#b4">Complete homework</a>
+          </nav>
+        </li>
+      </ol>
+      <div id="search-empty" hidden>
+        <h3>No matching sessions</h3>
+        <p>Try a broader topic, or clear your search to see the full syllabus.</p>
+      </div>
+    </section>
+    <footer class="course-footer">
+      <span>QuestionPro · AI-native software engineering program</span>
+      <a href="#course-title">Back to course overview</a>
+    </footer>
+  </main>
+</body>
+</html>

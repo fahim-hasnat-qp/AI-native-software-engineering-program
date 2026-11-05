@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Applications & Architecture — Session 04</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
+
+  :root {
+    --bg:      #ffffff;
+    --fg:      #0f0f0f;
+    --fg-sub:  #2e2e2e;
+    --fg-muted:#666666;
+    --border:  #e0e0e0;
+    --surface: #f4f4f6;
+    --accent:  oklch(61.6% 0.1696 251.2);
+    --accent-soft: oklch(61.6% 0.1696 251.2 / 8%);
+    --accent-mid:  oklch(61.6% 0.1696 251.2 / 18%);
+    --slide-bg: #fff;
+    --slide-text: oklch(47.8% 0.0244 255);
+    --slide-text-subtle: oklch(68.9% 0 0);
+    --slide-border: oklch(88.2% 0 0);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Fira Sans', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--fg);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .slides { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4.5rem 7rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    background: var(--bg);
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+  .slide.center { align-items: center; text-align: center; }
+
+  h1 { font-size: 5.25rem; font-weight: 700; color: var(--fg); line-height: 1.06; letter-spacing: -0.025em; }
+  h2 { font-size: 3.75rem; font-weight: 600; color: var(--fg); line-height: 1.1;  letter-spacing: -0.015em; }
+  h3 { font-size: 2rem; font-weight: 600; color: var(--fg); line-height: 1.2; }
+  p  { font-size: 1.45rem; color: var(--fg-sub); line-height: 1.65; }
+
+  .kicker {
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .accent { color: var(--accent); }
+
+  /* Title slide */
+  .slide.title-slide { border-left: 6px solid var(--accent); }
+
+  /* Divider slides */
+  .slide.divider { background: var(--accent); }
+  .slide.divider h2 { color: #fff; font-size: 3.75rem; }
+  .slide.divider .sub { font-size: 1.35rem; color: oklch(100% 0 0 / 65%); margin-top: 0.75rem; }
+
+  /* Progress bar */
+  .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0; z-index: 100; transition: width 0.35s cubic-bezier(.2,.8,.2,1); }
+
+  /* Nav */
+  .slide-nav {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    display: flex; gap: 0.5rem; z-index: 100;
+  }
+  .slide-nav button {
+    font-family: inherit; font-size: 1.1rem; padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); color: var(--fg-muted); cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .slide-nav button:hover { color: var(--fg); background: #ebebeb; }
+  .slide-nav button:active { transform: scale(0.92); }
+
+  .slide-counter {
+    position: fixed; bottom: 1.75rem; left: 50%; transform: translateX(-50%);
+    font-size: 0.8rem; color: var(--fg-muted);
+  }
+
+  /* Keyboard hint */
+  .kbd-hint {
+    position: fixed; bottom: 1.75rem; left: 1.5rem;
+    font-size: 0.72rem; color: var(--fg-muted); letter-spacing: 0.04em;
+  }
+
+  /* ── Component styles ── */
+
+  /* Step-by-step flow / overview list */
+  .steps-list { display: flex; flex-direction: column; margin-top: 2rem; width: 100%; max-width: 680px; }
+  .step-row { display: flex; align-items: flex-start; gap: 1.5rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .step-row:first-child { border-radius: 14px 14px 0 0; }
+  .step-row:last-child  { border-bottom: none; border-radius: 0 0 14px 14px; }
+  .step-num   { font-size: 0.72rem; font-weight: 700; color: var(--accent); width: 22px; flex-shrink: 0; padding-top: 0.2rem; font-family: monospace; }
+  .step-title { font-size: 1rem;    font-weight: 700; color: var(--fg); }
+  .step-desc  { font-size: 0.92rem; color: var(--fg-muted); margin-top: 0.2rem; line-height: 1.45; }
+
+  /* Summary grid */
+  .sum-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; width: 100%; margin-top: 2rem; }
+  .sum-card { border: 1.5px solid var(--border); border-radius: 12px; padding: 1.1rem 1rem; background: var(--surface); display: flex; flex-direction: column; gap: 0.35rem; }
+  .sum-card.hi { border-color: var(--accent); background: var(--accent-soft); }
+  .sum-slash { font-size: 1.15rem; font-weight: 700; color: var(--accent); font-family: monospace; }
+  .sum-name  { font-size: 0.88rem; font-weight: 600; color: var(--fg-sub); line-height: 1.3; }
+  .sum-card.hi .sum-name { color: var(--fg); }
+  .sum-hook  { font-size: 0.7rem; color: oklch(72.3% 0.1755 56.7); margin-top: 0.2rem; }
+
+  /* Tag pill */
+  .tag { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+  .tag-cmd { background: var(--accent-mid); color: oklch(33% 0.13 254); }
+  .tag-ski { background: oklch(93.4% 0.0698 124.3); color: oklch(31% 0.10 140); }
+
+  /* Two-column concept comparison */
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; width: 100%; margin-top: 2rem; max-width: 900px; }
+  .vs-card { border: 1.5px solid var(--border); border-radius: 14px; padding: 1.5rem 1.75rem; background: var(--surface); }
+  .vs-card.hi { border-color: var(--accent); background: var(--accent-soft); }
+  .vs-card-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.5rem; }
+  .vs-card.hi .vs-card-label { color: var(--accent); }
+  .vs-card-title { font-size: 1.5rem; font-weight: 700; color: var(--fg); margin-bottom: 0.75rem; }
+  .vs-card.hi .vs-card-title { color: var(--accent); }
+  .vs-attr { font-size: 0.95rem; color: var(--fg-muted); margin-bottom: 0.4rem; line-height: 1.5; }
+  .vs-attr strong { color: var(--fg-sub); font-weight: 600; }
+
+  /* Decision / mapping table */
+  .dtable { width: 100%; border-collapse: collapse; margin-top: 1.75rem; }
+  .dtable th { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.5rem 1rem; border-bottom: 2px solid var(--border); color: var(--fg-muted); text-align: left; }
+  .dtable th.acc { color: var(--accent); }
+  .dtable td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 1rem; color: var(--fg-sub); vertical-align: middle; }
+  .dtable td.cat { font-weight: 700; color: var(--fg); }
+  .dtable tr:last-child td { border-bottom: none; }
+  .dtable tr:hover td { background: var(--surface); }
+  .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 5px; }
+  .badge-yes  { background: oklch(93.4% 0.0698 124.3); color: oklch(31% 0.10 140); border: 1px solid oklch(49.9% 0.1603 139.9 / 40%); }
+  .badge-some { background: oklch(95% 0.0781 95.7); color: oklch(38% 0.1 80); border: 1px solid oklch(65% 0.12 80 / 35%); }
+  .badge-no   { background: var(--surface); color: var(--fg-muted); border: 1px solid var(--border); }
+
+  /* Diagram image frame */
+  .img-frame { width: 100%; display: flex; justify-content: center; margin-top: 1.1rem; }
+  .img-frame img { max-width: 100%; max-height: 56vh; border-radius: 14px; border: 1px solid var(--border); box-shadow: 0 8px 30px rgba(0,0,0,0.08); background: #fff; }
+  .img-hint { font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.65rem; width: 100%; text-align: center; letter-spacing: 0.02em; }
+  .cap { margin-top: 0.9rem; max-width: 780px; font-size: 1.1rem; }
+
+  /* Tighter heading for image-heavy slides */
+  .slide.visual h2 { font-size: 2.75rem; }
+  .slide.visual .kicker { margin-bottom: 1rem; }
+
+  /* ── Animations ── */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes riseIn   { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    @keyframes popIn    { from { opacity: 0; transform: scale(0.86); }      to { opacity: 1; transform: none; } }
+    @keyframes slideInL { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+
+    .slide.active .kicker { animation: riseIn 0.5s ease both; }
+    .slide.active h1       { animation: riseIn 0.6s cubic-bezier(.2,.7,.2,1) 0.05s both; }
+    .slide.active h2       { animation: riseIn 0.6s cubic-bezier(.2,.7,.2,1) 0.05s both; }
+    .slide.active > p,
+    .slide.active .img-frame { animation: riseIn 0.6s ease 0.15s both; }
+    .slide.active > p ~ p  { animation-delay: 0.28s; }
+
+    .slide.divider.active h2   { animation: popIn 0.55s cubic-bezier(.2,.8,.2,1) both; }
+    .slide.divider.active .sub { animation: riseIn 0.5s ease 0.2s both; }
+
+    .slide.active .step-row { animation: slideInL 0.5s ease both; }
+    .slide.active .step-row:nth-child(1){animation-delay:.15s}
+    .slide.active .step-row:nth-child(2){animation-delay:.27s}
+    .slide.active .step-row:nth-child(3){animation-delay:.39s}
+    .slide.active .step-row:nth-child(4){animation-delay:.51s}
+    .slide.active .step-row:nth-child(5){animation-delay:.63s}
+    .slide.active .step-row:nth-child(6){animation-delay:.75s}
+    .slide.active .step-row:nth-child(7){animation-delay:.87s}
+
+    .slide.active .sum-card { animation: popIn 0.45s ease both; }
+    .slide.active .sum-card:nth-child(1){animation-delay:.08s}
+    .slide.active .sum-card:nth-child(2){animation-delay:.16s}
+    .slide.active .sum-card:nth-child(3){animation-delay:.24s}
+    .slide.active .sum-card:nth-child(4){animation-delay:.32s}
+    .slide.active .sum-card:nth-child(5){animation-delay:.40s}
+
+    .slide.active .vs-card { animation: popIn 0.5s ease both; }
+    .slide.active .vs-card:nth-child(1){animation-delay:.10s}
+    .slide.active .vs-card:nth-child(2){animation-delay:.22s}
+
+    .slide.active .dtable { animation: riseIn 0.55s ease 0.1s both; }
+  }
+  </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
+</head>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 04</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session03/index.html" aria-label="Previous session: 03">Previous session</a>
+    <a href="../backend-llm-integration/index.html" aria-label="Next: Backend LLM integration supplement">Next supplement</a>
+  </nav>
+</header>
+
+<div class="slides" id="lesson" role="main" aria-label="Session 04 slides" tabindex="-1">
+
+  <!-- 01 · TITLE -->
+  <div class="slide title-slide active" id="what-are-ai-applications-and-how-do-we-build-them" role="region" aria-label="What Are AI Applications — And How Do We Build Them?" tabindex="-1">
+    <div class="kicker">AI Applications · Session 04</div>
+    <h1>What Are<br>AI Applications —<br><span class="accent">And How Do We Build Them?</span></h1>
+    <p style="margin-top: 2rem; max-width: 700px;">Four categories of AI capability. One architecture pattern that ships every one of them into a real product.</p>
+  </div>
+
+  <!-- DIVIDER · SECTION 1 -->
+  <div class="slide divider center" id="what-are-ai-applications" role="region" aria-label="What Are AI Applications?" tabindex="-1" inert>
+    <h2>What Are AI Applications?</h2>
+    <div class="sub">Four categories of capability</div>
+  </div>
+
+  <!-- 02 · OVERVIEW OF 4 CATEGORIES -->
+  <div class="slide" id="predictive-generative-agentic-embedded" role="region" aria-label="Predictive. Generative. Agentic. Embedded." tabindex="-1" inert>
+    <div class="kicker">The four categories, at a glance</div>
+    <h2>Predictive. Generative.<br><span class="accent">Agentic. Embedded.</span></h2>
+    <div class="steps-list" style="max-width: 100%">
+      <div class="step-row">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Predictive AI</div>
+          <div class="step-desc">Learns from history to score or forecast the future — a fraud score, a churn risk, a demand forecast.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Generative AI</div>
+          <div class="step-desc">Learns the shape of language or images, then creates new content — text, code, pictures.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Agentic AI</div>
+          <div class="step-desc">Plans, takes actions with tools, and checks its own work — it loops until the goal is actually done.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Embedded AI</div>
+          <div class="step-desc">A small model quietly powering one feature inside a bigger app — no chat window, no separate screen.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 · CATEGORY 1 PREDICTIVE AI -->
+  <div class="slide visual" id="learns-from-the-past-scores-the-future" role="region" aria-label="Learns from the past. Scores the future." tabindex="-1" inert>
+    <div class="kicker">AI application type 1 of 4 · Predictive AI</div>
+    <h2>Learns from the past.<br><span class="accent">Scores the future.</span></h2>
+    <div class="img-frame">
+      <a href="images/03-category1-predective-ai.png" target="_blank" rel="noopener">
+        <img src="images/03-category1-predective-ai.png" alt="Predictive AI flow: historical data, feature engineering, model training, trained model, inference service, prediction/score, business action, monitoring/drift check" />
+      </a>
+    </div>
+    <p class="cap">No new content gets created here — just a number. That score feeds a business rule, not a conversation.</p>
+  </div>
+
+  <!-- 04 · CATEGORY 2 GENERATIVE AI -->
+  <div class="slide visual" id="predicts-the-next-token-one-at-a-time" role="region" aria-label="Predicts the next token. One at a time." tabindex="-1" inert>
+    <div class="kicker">AI application type 2 of 4 · Generative AI</div>
+    <h2>Predicts the next token.<br><span class="accent">One at a time.</span></h2>
+    <div class="img-frame">
+      <a href="images/04-category2-generative-ai.png" target="_blank" rel="noopener">
+        <img src="images/04-category2-generative-ai.png" alt="Generative AI flow: huge training corpus, pretraining, foundation model, fine-tuning, user prompt, deployed model, generated output" />
+      </a>
+    </div>
+    <p class="cap">There's no lookup happening. The model writes new text, code, or images token by token — shaped by pretraining and optional fine-tuning.</p>
+  </div>
+
+  <!-- 05 · CATEGORY 3 AGENTIC AI -->
+  <div class="slide visual" id="plans-acts-checks-its-own-work" role="region" aria-label="Plans. Acts. Checks its own work." tabindex="-1" inert>
+    <div class="kicker">AI application type 3 of 4 · Agentic AI</div>
+    <h2>Plans. Acts.<br><span class="accent">Checks its own work.</span></h2>
+    <div class="img-frame">
+      <a href="images/05-category3-agentic-ai.png" target="_blank" rel="noopener">
+        <img src="images/05-category3-agentic-ai.png" alt="Agentic AI flow: user goal, planner, memory, chosen action, tool/API call, observation, goal check loop, final result" />
+      </a>
+    </div>
+    <p class="cap">Instead of one answer, the model loops — think, act, observe — calling real tools until the goal is verified as done.</p>
+  </div>
+
+  <!-- 06 · CATEGORY 4 EMBEDDED AI -->
+  <div class="slide visual" id="no-chat-window-just-a-smarter-feature" role="region" aria-label="No chat window. Just a smarter feature." tabindex="-1" inert>
+    <div class="kicker">AI application type 4 of 4 · Embedded AI</div>
+    <h2>No chat window.<br><span class="accent">Just a smarter feature.</span></h2>
+    <div class="img-frame">
+      <a href="images/06-category4-embedded-ai.png" target="_blank" rel="noopener">
+        <img src="images/06-category4-embedded-ai.png" alt="Embedded AI flow: user activity, real-time feature pipeline, small embedded model, result woven into UI, feedback loop" />
+      </a>
+    </div>
+    <p class="cap">The AI is invisible — woven into autocomplete, ranking, or recommendations. Users never know they're talking to a model.</p>
+  </div>
+
+  <!-- 07 · CAPABILITY DIMENSIONS -->
+  <div class="slide visual" id="two-more-ways-ai-extends-past-text" role="region" aria-label="Two more ways AI extends past text." tabindex="-1" inert>
+    <div class="kicker">Beyond the four categories</div>
+    <h2>Two more ways AI<br><span class="accent">extends past text.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/07a-capability-dimensions.png" target="_blank" rel="noopener">
+        <img src="images/crops/07a-capability-dimensions.png" alt="Physical AI (the robot) and Multimodal AI (the senses)" />
+      </a>
+    </div>
+    <p class="cap">Physical AI acts in the real 3D world. Multimodal AI reads, sees, and hears all at once. Both push past "just chatting."</p>
+  </div>
+
+  <!-- 08 · STAGES OF INTELLIGENCE -->
+  <div class="slide visual" id="a-staircase-of-ambition" role="region" aria-label="A staircase of ambition." tabindex="-1" inert>
+    <div class="kicker">How smart can it get?</div>
+    <h2>A staircase<br>of <span class="accent">ambition.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/07b-stages-of-intelligence.png" target="_blank" rel="noopener">
+        <img src="images/crops/07b-stages-of-intelligence.png" alt="Stages of intelligence: Stage 1 Narrow AI (ANI), Stage 2 not covered, Stage 3 Artificial Superintelligence (ASI)" />
+      </a>
+    </div>
+    <p class="cap">We're squarely on Stage 1 today — narrow, superhuman at one task, useless outside it. AGI and ASI are the (debated) steps above.</p>
+  </div>
+
+  <!-- 09 · SECTION 1 SUMMARY -->
+  <div class="slide" id="four-categories-one-question-each" role="region" aria-label="Four categories. One question each." tabindex="-1" inert>
+    <div class="kicker">Summary · Section 1</div>
+    <h2>Four categories.<br><span class="accent">One question each.</span></h2>
+    <div class="sum-grid">
+      <div class="sum-card hi">
+        <div class="sum-slash">Predictive</div>
+        <div class="sum-name">History → pattern → score</div>
+        <div class="sum-hook">Fraud scores, demand forecasts</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-slash">Generative</div>
+        <div class="sum-name">Corpus → foundation model → new content</div>
+        <div class="sum-hook">Chat, images, code completion</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-slash">Agentic</div>
+        <div class="sum-name">Plan → tool call → verify goal</div>
+        <div class="sum-hook">Coding agents, research agents</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-slash">Embedded</div>
+        <div class="sum-name">Invisible model inside a feature</div>
+        <div class="sum-hook">Autocomplete, search ranking</div>
+      </div>
+    </div>
+    <p style="margin-top: 2rem; max-width: 780px; font-size: 1.1rem;">Physical and multimodal AI stretch these further — into the 3D world, and into eyes + ears + text at once. Nearly everything shipping today is still Stage 1: narrow intelligence.</p>
+  </div>
+
+  <!-- DIVIDER · SECTION 2 -->
+  <div class="slide divider center" id="ai-application-architecture" role="region" aria-label="AI Application Architecture" tabindex="-1" inert>
+    <h2>AI Application Architecture</h2>
+    <div class="sub">From the traditional stack to RAG-powered agents</div>
+  </div>
+
+  <!-- 10 · TRADITIONAL APP FLOW -->
+  <div class="slide visual" id="the-stack-you-already-know" role="region" aria-label="The stack you already know." tabindex="-1" inert>
+    <div class="kicker">Before AI · The baseline stack</div>
+    <h2>The stack you<br>already <span class="accent">know.</span></h2>
+    <div class="img-frame">
+      <a href="images/01-traditional-app-flow.png" target="_blank" rel="noopener">
+        <img src="images/01-traditional-app-flow.png" alt="Traditional app flow: client layer, API gateway, backend services, cache, data layer, third-party services" />
+      </a>
+    </div>
+    <p class="cap">Client apps → API gateway → backend services → cache → data layer, with third parties handled on the side. Most engineering teams already run this.</p>
+  </div>
+
+  <!-- 11 · AI MERGED INTO STACK -->
+  <div class="slide visual" id="ai-doesn-t-replace-it-it-plugs-into-it" role="region" aria-label="AI doesn't replace it. It plugs into it." tabindex="-1" inert>
+    <div class="kicker">Same stack · One new layer</div>
+    <h2>AI doesn't replace it.<br>It <span class="accent">plugs into it.</span></h2>
+    <div class="img-frame">
+      <a href="images/02-ai-merged-into-traditional-app-flow.png" target="_blank" rel="noopener">
+        <img src="images/02-ai-merged-into-traditional-app-flow.png" alt="AI merged into the traditional stack: API gateway routes normal vs AI-powered requests to unchanged business logic or a new AI service layer, sharing the same database" />
+      </a>
+    </div>
+    <p class="cap">The API gateway learns one new trick: routing AI-powered requests to a new AI service layer that sits <em>beside</em> — not instead of — your existing business logic. Same database, both paths.</p>
+    <p class="cap">Todo App Example. And Ai Todo App, Ai Todo App for QP</p>
+  </div>
+
+  <!-- 12 · RAG + AGENT FLOW -->
+  <div class="slide visual" id="nine-steps-from-question-to-grounded-answer" role="region" aria-label="Nine steps from question to grounded answer." tabindex="-1" inert>
+    <div class="kicker">Zooming in · Inside the AI service layer</div>
+    <h2>Nine steps from question<br>to <span class="accent">grounded answer.</span></h2>
+    <div class="img-frame">
+      <a href="images/08-RAG-agent-flow.png" target="_blank" rel="noopener">
+        <img src="images/08-RAG-agent-flow.png" alt="RAG and agent flow: document ingestion offline, then user question, embedding, vector search, retrieved context, prompt build, LLM reasoning, tool calls, guardrails, final answer" />
+      </a>
+    </div>
+    <p class="cap">Retrieval-Augmented Generation: the model doesn't just answer from memory — it searches your own documents first, reasons, optionally calls a tool, then passes guardrails before the user ever sees it.</p>
+  </div>
+
+  <!-- DIVIDER · VECTOR DB DEEP DIVE -->
+  <div class="slide divider center" id="inside-the-vector-database" role="region" aria-label="Inside the Vector Database" tabindex="-1" inert>
+    <h2>Inside the Vector Database</h2>
+    <div class="sub">The memory behind every RAG pipeline</div>
+  </div>
+
+  <!-- 13 · THREE KINDS OF DATABASES -->
+  <div class="slide visual" id="traditional-blockchain-vector" role="region" aria-label="Traditional. Blockchain. Vector." tabindex="-1" inert>
+    <div class="kicker">Vector databases · 1 of 6 · Same word, different job</div>
+    <h2>Traditional. Blockchain.<br><span class="accent">Vector.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/09a-three-databases.png" target="_blank" rel="noopener">
+        <img src="images/crops/09a-three-databases.png" alt="Three kinds of databases: traditional, blockchain/web3, and vector database compared by what they store, how they search, and who owns them" />
+      </a>
+    </div>
+    <p class="cap">Rule of thumb: traditional DB = "give me exactly this." Blockchain = "prove this happened and can't be changed." Vector DB = "give me things like this."</p>
+  </div>
+
+  <!-- 14 · KEYWORD VS MEANING SEARCH -->
+  <div class="slide visual" id="exact-match-vs-close-enough" role="region" aria-label="Exact match vs. close enough." tabindex="-1" inert>
+    <div class="kicker">Vector databases · 2 of 6</div>
+    <h2>Exact match<br>vs. <span class="accent">close enough.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/09b-keyword-vs-meaning.png" target="_blank" rel="noopener">
+        <img src="images/crops/09b-keyword-vs-meaning.png" alt="Regular keyword search misses meaning matches, vector meaning search finds them" />
+      </a>
+    </div>
+    <p class="cap">"Cheap flights" and "affordable airfare deals" mean the same thing — only one of these databases knows that.</p>
+  </div>
+
+  <!-- 15 · EMBEDDING SPACE -->
+  <div class="slide visual" id="every-sentence-becomes-a-point-in-space" role="region" aria-label="Every sentence becomes a point in space." tabindex="-1" inert>
+    <div class="kicker">Vector databases · 3 of 6</div>
+    <h2>Every sentence becomes<br>a <span class="accent">point in space.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/09c-embedding-space.png" target="_blank" rel="noopener">
+        <img src="images/crops/09c-embedding-space.png" alt="Text goes through an embedding model to become a vector; similar meanings land close together in vector space" />
+      </a>
+    </div>
+    <p class="cap">Embeddings turn meaning into numbers. Similar ideas land close together — regardless of the exact words used.</p>
+  </div>
+
+  <!-- 16 · INGESTION PIPELINE -->
+  <div class="slide visual" id="load-the-documents-once-ahead-of-time" role="region" aria-label="Load the documents once, ahead of time." tabindex="-1" inert>
+    <div class="kicker">Vector databases · 4 of 6 · Offline</div>
+    <h2>Load the documents<br><span class="accent">once, ahead of time.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/09d-ingestion-pipeline.png" target="_blank" rel="noopener">
+        <img src="images/crops/09d-ingestion-pipeline.png" alt="Ingestion pipeline: documents, chunking, embedding model, vector database storage" />
+      </a>
+    </div>
+    <p class="cap">Chunk, embed, store — this happens once, before any user ever asks a question.</p>
+  </div>
+
+  <!-- 17 · RAG ONLINE -->
+  <div class="slide visual" id="every-question-answered-live" role="region" aria-label="Every question, answered live." tabindex="-1" inert>
+    <div class="kicker">Vector databases · 5 of 6 · Online</div>
+    <h2>Every question,<br><span class="accent">answered live.</span></h2>
+    <div class="img-frame">
+      <a href="images/crops/09e-rag-online.png" target="_blank" rel="noopener">
+        <img src="images/crops/09e-rag-online.png" alt="RAG online flow: user question embedded, similarity search finds top-K chunks, prompt assembled, LLM answers grounded in retrieved docs" />
+      </a>
+    </div>
+    <p class="cap">The question gets embedded too, matched against stored chunks, and handed to the LLM alongside the retrieved passages — grounding the answer in your own data.</p>
+  </div>
+
+  <!-- 17b · VECTOR DB AS MEMORY -->
+  <div class="slide" id="one-database-two-very-different-jobs" role="region" aria-label="One database. Two very different jobs." tabindex="-1" inert>
+    <div class="kicker">Vector databases · 6 of 6 · Not just retrieval</div>
+    <h2>One database.<br><span class="accent">Two very different jobs.</span></h2>
+    <div class="vs-grid">
+      <div class="vs-card">
+        <div class="vs-card-label">Collection 1</div>
+        <div class="vs-card-title">Knowledge base (RAG)</div>
+        <div class="vs-attr"><strong>Holds:</strong> your docs, wikis, tickets, FAQs</div>
+        <div class="vs-attr"><strong>Queried:</strong> once per question, same content for every user</div>
+        <div class="vs-attr"><strong>Changes:</strong> mostly static — re-ingested on a schedule</div>
+        <div class="vs-attr"><strong>Answers:</strong> "what does our refund policy say?"</div>
+      </div>
+      <div class="vs-card hi">
+        <div class="vs-card-label">Collection 2</div>
+        <div class="vs-card-title">Agent memory / context</div>
+        <div class="vs-attr"><strong>Holds:</strong> past turns, user facts, preferences, prior tool results</div>
+        <div class="vs-attr"><strong>Queried:</strong> scoped to one user or session, different per person</div>
+        <div class="vs-attr"><strong>Changes:</strong> written to on every turn — grows as it's used</div>
+        <div class="vs-attr"><strong>Answers:</strong> "what did this user tell me last week?"</div>
+      </div>
+    </div>
+    <p class="cap">Same embeddings, same similarity search — just a different collection. This is how an agent "remembers" you across sessions without stuffing the entire history into every prompt.</p>
+  </div>
+
+  <!-- 18 · ARCHITECTURE SUMMARY -->
+  <div class="slide" id="one-new-layer-one-retrieval-pattern" role="region" aria-label="One new layer. One retrieval pattern." tabindex="-1" inert>
+    <div class="kicker">Summary · Section 2</div>
+    <h2>One new layer.<br><span class="accent">One retrieval pattern.</span></h2>
+    <div class="sum-grid">
+      <div class="sum-card hi">
+        <div class="sum-slash">API Gateway</div>
+        <div class="sum-name">Routes normal vs. AI-powered requests</div>
+        <div class="sum-hook">TLS, rate limiting, now a fork in the road</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-slash">AI Service Layer</div>
+        <div class="sum-name">Classifier → guardrails → orchestrator → cache</div>
+        <div class="sum-hook">Sits beside business logic, not instead of it</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-slash">RAG Pipeline</div>
+        <div class="sum-name">Retrieve → augment → generate</div>
+        <div class="sum-hook">9 steps from question to grounded answer</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-slash">Vector Database</div>
+        <div class="sum-name">Embeddings + similarity search</div>
+        <div class="sum-hook">Finds things "like this," not "exactly this"</div>
+      </div>
+    </div>
+    <p style="margin-top: 2rem; max-width: 780px; font-size: 1.1rem;">This is the pipeline behind a knowledge-grounded chatbot or agent — not every AI application needs all four pieces. The next slide breaks down who actually uses what.</p>
+  </div>
+
+  <!-- 18b · REALITY CHECK: WHO USES WHAT -->
+  <div class="slide" id="same-gateway-very-different-depth" role="region" aria-label="Same gateway. Very different depth." tabindex="-1" inert>
+    <div class="kicker">Reality check · Not every category needs every piece</div>
+    <h2>Same gateway.<br><span class="accent">Very different depth.</span></h2>
+    <table class="dtable">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th class="acc">API Gateway</th>
+          <th class="acc">AI Service Layer</th>
+          <th class="acc">RAG + Vector DB</th>
+          <th class="acc">LLM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cat">Predictive AI</td>
+          <td><span class="badge badge-yes">Yes</span></td>
+          <td><span class="badge badge-no">Rarely</span></td>
+          <td><span class="badge badge-no">No</span></td>
+          <td><span class="badge badge-no">No</span></td>
+        </tr>
+        <tr>
+          <td class="cat">Generative AI</td>
+          <td><span class="badge badge-yes">Yes</span></td>
+          <td><span class="badge badge-yes">Yes</span></td>
+          <td><span class="badge badge-some">Sometimes</span></td>
+          <td><span class="badge badge-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td class="cat">Agentic AI</td>
+          <td><span class="badge badge-yes">Yes</span></td>
+          <td><span class="badge badge-yes">Yes</span></td>
+          <td><span class="badge badge-some">Sometimes</span></td>
+          <td><span class="badge badge-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td class="cat">Embedded AI</td>
+          <td><span class="badge badge-some">Sometimes</span></td>
+          <td><span class="badge badge-no">Rarely</span></td>
+          <td><span class="badge badge-no">Rarely</span></td>
+          <td><span class="badge badge-no">Rarely</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 1.5rem; max-width: 780px; font-size: 1.1rem;">Predictive and embedded AI usually skip the LLM, RAG, and vector DB entirely — a trained model plus an inference call is the whole stack. Generative and agentic AI reach for RAG only when grounding answers in your own data, not by default.</p>
+  </div>
+
+  <!-- 19 · CLOSE -->
+  <div class="slide center" id="same-gateway-different-depth" role="region" aria-label="Same gateway. Different depth." tabindex="-1" inert>
+    <div class="kicker">Bringing it together</div>
+    <h1>Same gateway.<br>Different <span class="accent">depth.</span></h1>
+    <p style="margin-top: 2rem; max-width: 680px;">Every AI application — predictive, generative, agentic, or embedded — shares the same entry point: the API gateway and the AI service layer. What happens after that depends entirely on the category. RAG and vector databases are a tool for grounding, not a universal requirement.</p>
+    <p style="margin-top: 1.1rem; max-width: 680px; color: var(--fg-muted);">Next: pick one category, sketch which pieces it actually needs, and build the smallest working version.</p>
+  </div>
+
+</div>
+
+<div class="progress-bar" id="progress"></div>
+
+<nav class="slide-nav">
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</nav>
+<div class="slide-counter" id="counter"></div>
+<div class="kbd-hint">← → Space · Home · End</div>
+
+<script>
+  const slides   = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  let cur = 0;
+
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
+    counter.textContent = `${cur + 1} / ${slides.length}`;
+    progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
+  }
+
+  document.getElementById('next').onclick = () => show(cur + 1);
+  document.getElementById('prev').onclick  = () => show(cur - 1);
+  document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
+    if (e.key === 'ArrowLeft')  show(cur - 1);
+    if (e.key === 'Home')       show(0);
+    if (e.key === 'End')        show(slides.length - 1);
+  });
+
+  show(0);
+</script>
+</body>
+</html>

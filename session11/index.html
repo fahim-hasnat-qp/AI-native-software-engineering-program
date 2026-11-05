@@ -428,18 +428,30 @@ pre {
   font-size: 0.9em;
 }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
-<div class="slides">
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 11</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session10/index.html" aria-label="Previous session: 10">Previous session</a>
+    <a href="../session12/index.html" aria-label="Next session: 12">Next session</a>
+  </nav>
+</header>
+<div class="slides" id="lesson" role="main" aria-label="Session 11 slides" tabindex="-1">
 
   <!-- ============ SESSION 2 ============ -->
-  <div class="slide center active">
+  <div class="slide center active" id="the-loop-the-bill-and-retries" role="region" aria-label="The loop, the bill, and retries" tabindex="-1">
     <div class="kicker">Session 11</div>
     <h1>The loop, the bill,<br><span class="accent">and retries</span></h1>
   </div>
 
   <!-- 14a · LOOP ANIMATED -->
-  <div class="slide">
+  <div class="slide" id="the-loop-animated" role="region" aria-label="The loop, animated" tabindex="-1" inert>
     <div class="kicker">Watch it run</div>
     <h2>The loop, animated</h2>
     <div class="loop-diagram">
@@ -455,7 +467,7 @@ pre {
   </div>
 
   <!-- 14 · AGENT LOOP -->
-  <div class="slide">
+  <div class="slide" id="the-agent-loop" role="region" aria-label="The agent loop" tabindex="-1" inert>
     <div class="kicker">Example 03</div>
     <h2>The agent loop</h2>
     <pre>while (!finished) {
@@ -473,7 +485,7 @@ pre {
   </div>
 
   <!-- 14b · WORKED EXAMPLE -->
-  <div class="slide">
+  <div class="slide" id="refactor-getpokemonbyname" role="region" aria-label="&quot;Refactor getPokemonByName &quot;" tabindex="-1" inert>
     <div class="kicker">Let's trace it &middot; 6 turns, one loop</div>
     <h2>"Refactor <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 4px;">getPokemonByName</code>"</h2>
     <div style="display: flex; align-items: flex-end; gap: 0.9rem; margin-top: 2.5rem; flex-wrap: wrap;">
@@ -511,7 +523,7 @@ pre {
   </div>
 
   <!-- 15 · SAFEGUARDS -->
-  <div class="slide">
+  <div class="slide" id="bounding-the-loop" role="region" aria-label="Bounding the loop" tabindex="-1" inert>
     <div class="kicker">Two safeguards, two failures</div>
     <h2>Bounding the loop</h2>
     <div class="box">
@@ -524,7 +536,7 @@ pre {
   </div>
 
   <!-- 17 · STATE -->
-  <div class="slide">
+  <div class="slide" id="history-vs-state" role="region" aria-label="History vs. state" tabindex="-1" inert>
     <div class="kicker">Example 04</div>
     <h2>History vs. state</h2>
     <p>The model itself is always stateless &mdash; that never changes. This is
@@ -562,7 +574,7 @@ pre {
   </div>
 
   <!-- 18 · COST -->
-  <div class="slide">
+  <div class="slide" id="append-only-for-a-reason" role="region" aria-label="Append-only, for a reason" tabindex="-1" inert>
     <div class="kicker">What it costs</div>
     <h2>Append-only,<br>for a reason</h2>
     <div style="display: flex; align-items: flex-end; gap: 0.9rem; margin-top: 2rem;">
@@ -584,7 +596,7 @@ pre {
   </div>
 
   <!-- 18b · CACHING MECHANICS -->
-  <div class="slide">
+  <div class="slide" id="where-does-the-cache-actually-live" role="region" aria-label="Where does the cache actually live?" tabindex="-1" inert>
     <div class="kicker">Not a harness feature &mdash; a provider one</div>
     <h2>Where does the cache<br>actually live?</h2>
     <div style="display: flex; gap: 1.5rem; align-items: flex-start; width: 100%; max-width: 1060px; margin-top: 1.75rem;">
@@ -611,7 +623,7 @@ tool    found pokedex.ts
   </div>
 
   <!-- 18b2 · CACHING EXAMPLE -->
-  <div class="slide">
+  <div class="slide" id="what-s-inside-one-single-call" role="region" aria-label="What's inside one single call" tabindex="-1" inert>
     <div class="kicker">A concrete example</div>
     <h2>What's inside<br>one single call</h2>
     <p style="margin-top: 1rem;">One turn = one pass through the loop = one call to the model. Here's
@@ -630,7 +642,7 @@ tool    found pokedex.ts
   </div>
 
   <!-- 18c · WHY COMPACTION -->
-  <div class="slide">
+  <div class="slide" id="caching-makes-tokens-cheaper-compaction-makes-fewer-of-them-exist" role="region" aria-label="Caching makes tokens cheaper. Compaction makes fewer of them exist." tabindex="-1" inert>
     <div class="kicker">Why, not how &mdash; the how is next session</div>
     <h2>Caching makes tokens cheaper.<br>Compaction makes <span class="accent">fewer of them exist.</span></h2>
     <div class="box">
@@ -642,7 +654,7 @@ tool    found pokedex.ts
   </div>
 
   <!-- 18d · CACHE + COMPACTION -->
-  <div class="slide center">
+  <div class="slide center" id="compaction-always-costs-one-cache-miss" role="region" aria-label="Compaction always costs one cache miss." tabindex="-1" inert>
     <div class="kicker">The two are not independent</div>
     <h1>Compaction always<br>costs <span class="accent">one cache miss.</span></h1>
     <p style="margin-top: 1.5rem;">Compacting rewrites the prefix, so the cache hash no longer matches &mdash; the very next call is a guaranteed miss, billed at full write price.</p>
@@ -650,7 +662,7 @@ tool    found pokedex.ts
   </div>
 
   <!-- 16 · TWO RETRIES -->
-  <div class="slide">
+  <div class="slide" id="two-kinds-of-retry" role="region" aria-label="Two kinds of retry" tabindex="-1" inert>
     <div class="kicker">More calls, more 429s</div>
     <h2>Two kinds of retry</h2>
     <div class="box">
@@ -670,7 +682,7 @@ tool    found pokedex.ts
   </div>
 
   <!-- HOMEWORK 2 -->
-  <div class="slide">
+  <div class="slide" id="the-loop-and-your-first-score" role="region" aria-label="The loop, and your first score" tabindex="-1" inert>
     <div class="kicker">Homework &middot; week 2</div>
     <h2>The loop,<br>and your first score</h2>
     <pre>pnpm golden --runs=3   # 10 fixed questions, averaged</pre>
@@ -681,7 +693,7 @@ tool    found pokedex.ts
   </div>
 
   <!-- LIVE POLL -->
-  <div class="slide">
+  <div class="slide" id="scan-or-enter-the-pin" role="region" aria-label="Scan, or enter the PIN" tabindex="-1" inert>
     <div class="kicker">Live poll</div>
     <h2>Scan, or enter the PIN</h2>
     <div style="display: flex; align-items: center; gap: 3.5rem; margin-top: 2rem;">
@@ -721,6 +733,7 @@ function show(index) {
   slides[current].classList.remove("active");
   current = (index + slides.length) % slides.length;
   slides[current].classList.add("active");
+    window.courseDeckChanged(slides, current);
   counter.textContent = `${current + 1} / ${slides.length}`;
   progress.style.width = `${((current + 1) / slides.length) * 100}%`;
 }
@@ -733,6 +746,7 @@ document
   .addEventListener("click", () => show(current - 1));
 
 document.addEventListener("keydown", (event) => {
+    if (event.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
   if (event.key === "ArrowRight" || event.key === " ") {
     event.preventDefault();
     show(current + 1);

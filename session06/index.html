@@ -471,13 +471,25 @@
     .slide.active .id-row .id-card:nth-child(1){animation-delay:.1s} .slide.active .id-row .id-card:nth-child(2){animation-delay:.2s} .slide.active .id-row .id-card:nth-child(3){animation-delay:.3s}
   }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 06</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session05/index.html" aria-label="Previous session: 05">Previous session</a>
+    <a href="../session07/index.html" aria-label="Next session: 07">Next session</a>
+  </nav>
+</header>
 
-<div class="slides">
+<div class="slides" id="lesson" role="main" aria-label="Session 06 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide title-slide active">
+  <div class="slide title-slide active" id="embeddings-demystified" role="region" aria-label="Embeddings, Demystified." tabindex="-1">
     <div class="kicker">Solo Session &middot; 45 Minutes</div>
     <h1>Embeddings,<br><span class="accent">Demystified.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">How numbers learn to mean something — words, vectors, and the geometry underneath every AI system you use.</p>
@@ -488,7 +500,7 @@
   </div>
 
   <!-- 02 · AGENDA -->
-  <div class="slide">
+  <div class="slide" id="six-stops-one-idea" role="region" aria-label="Six stops, one idea." tabindex="-1" inert>
     <div class="kicker">What we'll cover</div>
     <h2>Six stops, <span class="accent">one idea.</span></h2>
     <ul class="agenda">
@@ -502,7 +514,7 @@
   </div>
 
   <!-- 03 · HOOK -->
-  <div class="slide center">
+  <div class="slide center" id="paris-tokyo-banana" role="region" aria-label="Paris. Tokyo. Banana." tabindex="-1" inert>
     <div class="kicker">Quick game</div>
     <h1>Paris. Tokyo.<br><span class="accent">Banana.</span></h1>
     <div class="tools-row" style="margin-top: 2rem; justify-content: center;">
@@ -514,7 +526,7 @@
   </div>
 
   <!-- 04 · HOOK REVEAL -->
-  <div class="slide center">
+  <div class="slide center" id="you-didn-t-calculate-anything-you-felt-it" role="region" aria-label="You didn't calculate anything. You felt it." tabindex="-1" inert>
     <div class="kicker">The whole session, one question</div>
     <h1 style="max-width: 780px; margin: 0 auto;">You didn't calculate anything. You <span class="accent">felt it.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">Computers can't feel. All they have is numbers. So here's the question for the next 45 minutes:</p>
@@ -522,13 +534,13 @@
   </div>
 
   <!-- DIVIDER · THE PROBLEM -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="the-problem" role="region" aria-label="The Problem" tabindex="-1" inert>
     <h2>The Problem</h2>
     <div class="sub">Plain numbers don't capture meaning</div>
   </div>
 
   <!-- 06 · NAIVE ATTEMPT 1 -->
-  <div class="slide">
+  <div class="slide" id="give-each-word-an-id-number" role="region" aria-label="Give each word an ID number." tabindex="-1" inert>
     <div class="kicker">Attempt #1</div>
     <h2>Give each word an <span class="accent">ID number.</span></h2>
     <div class="id-row">
@@ -540,7 +552,7 @@
   </div>
 
   <!-- 07 · ONE-HOT + MATH PROOF (merged) -->
-  <div class="slide">
+  <div class="slide" id="one-hot-vectors-the-dot-product-says-zero-always" role="region" aria-label="One-hot vectors: the dot product says zero. Always." tabindex="-1" inert>
     <div class="kicker">Attempt #2 — and the actual math</div>
     <h2>One-hot vectors: the dot product says <span class="accent">zero. Always.</span></h2>
     <div class="id-row" style="margin-top: 1rem; font-size: 0.95rem;">
@@ -556,13 +568,13 @@
   </div>
 
   <!-- DIVIDER · THE INTUITION -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="the-intuition" role="region" aria-label="The Intuition" tabindex="-1" inert>
     <h2>The Intuition</h2>
     <div class="sub">Building coordinates by hand, before any machine does it</div>
   </div>
 
   <!-- 09 · LIVE ACTIVITY SETUP -->
-  <div class="slide">
+  <div class="slide" id="let-s-score-some-animals-no-debate-needed" role="region" aria-label="Let's score some animals. No debate needed." tabindex="-1" inert>
     <div class="kicker">Live activity — everyone participates</div>
     <h2>Let's score some animals.<br><span class="accent">No debate needed.</span></h2>
     <p style="margin-top: 1.5rem; max-width: 640px;">Four animals: Lion, Wolf, House Cat, Goldfish. As a group, rate each one 0–100 on two scales — these are facts, not opinions, so this should go fast:</p>
@@ -574,7 +586,7 @@
   </div>
 
   <!-- 10 · QUADRANT REVEAL -->
-  <div class="slide">
+  <div class="slide" id="a-point-per-animal-that-s-an-embedding" role="region" aria-label="A point per animal. That's an embedding." tabindex="-1" inert>
     <div class="kicker">What we just built, together</div>
     <h2>A point per animal.<br>That's an <span class="accent">embedding.</span></h2>
     <div class="quadrant-wrap">
@@ -604,7 +616,7 @@
   </div>
 
   <!-- 11 · SCALING UP (+ hand-built vs. trained dimensions, clarified) -->
-  <div class="slide">
+  <div class="slide" id="2-dimensions-300-dimensions" role="region" aria-label="2 dimensions → 300 dimensions." tabindex="-1" inert>
     <div class="kicker">Now stretch it — and a key distinction</div>
     <h2>2 dimensions &rarr; <span class="accent">300 dimensions.</span></h2>
     <p style="margin-top: 1rem; max-width: 660px;">Real word embeddings work the same way — hundreds of numbers per word instead of two. But here's where it stops working like our animal example:</p>
@@ -633,20 +645,20 @@
   </div>
 
   <!-- DIVIDER · THE LIVE MAGIC -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="the-live-magic" role="region" aria-label="The Live Magic" tabindex="-1" inert>
     <h2>The Live Magic</h2>
     <div class="sub">Vector arithmetic — and the math behind it</div>
   </div>
 
   <!-- 13 · KING - MAN + WOMAN -->
-  <div class="slide center">
+  <div class="slide center" id="king-man-woman" role="region" aria-label="King &amp;minus; Man + Woman = ?" tabindex="-1" inert>
     <div class="kicker">Try this before the reveal</div>
     <h1>King &minus; Man + Woman = <span class="accent">?</span></h1>
     <p style="margin-top: 2rem; max-width: 540px;">Shout out your guess.</p>
   </div>
 
   <!-- 14 · REVEAL + HONESTY BEAT (merged) -->
-  <div class="slide">
+  <div class="slide" id="queen" role="region" aria-label="Queen." tabindex="-1" inert>
     <div class="kicker">The reveal</div>
     <h2>Queen.</h2>
     <div class="flow" style="margin-top: 1.75rem;">
@@ -671,7 +683,7 @@
   </div>
 
   <!-- 15 · COSINE SIMILARITY + SIGN MYTH (merged) -->
-  <div class="slide">
+  <div class="slide" id="cosine-similarity-the-angle-not-the-ruler" role="region" aria-label="Cosine similarity: the angle, not the ruler." tabindex="-1" inert>
     <div class="kicker">How "close" gets measured</div>
     <h2>Cosine similarity: <span class="accent">the angle, not the ruler.</span></h2>
     <p style="margin-top: 0.75rem; max-width: 700px; font-family: monospace;">cos(&theta;) = (a &middot; b) / (&Vert;a&Vert; &times; &Vert;b&Vert;)</p>
@@ -684,7 +696,7 @@
   </div>
 
   <!-- 16 · LIVE DEMO CALLOUT -->
-  <div class="slide">
+  <div class="slide" id="let-s-look-inside-a-real-embedding-space" role="region" aria-label="Let's look inside a real embedding space." tabindex="-1" inert>
     <div class="kicker">Live demo</div>
     <h2>Let's look inside a real <span class="accent">embedding space.</span></h2>
     <div class="terminal">
@@ -698,20 +710,20 @@
   </div>
 
   <!-- DIVIDER · HOW IT'S LEARNED -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="how-it-s-learned" role="region" aria-label="How It's Learned" tabindex="-1" inert>
     <h2>How It's Learned</h2>
     <div class="sub">No human ever labels a single answer</div>
   </div>
 
   <!-- 18 · FIRTH QUOTE -->
-  <div class="slide center">
+  <div class="slide center" id="you-shall-know-a-word-by-the-company-it-keeps" role="region" aria-label="&quot;You shall know a word by the company it keeps. &quot;" tabindex="-1" inert>
     <div class="kicker">The one sentence that explains all of this</div>
     <h1 style="max-width: 760px; margin: 0 auto;">"You shall know a word by the <span class="accent">company it keeps.</span>"</h1>
     <p style="margin-top: 2rem;">&mdash; J.R. Firth, linguist, 1957</p>
   </div>
 
   <!-- 19 · RANDOM INITIALIZATION -->
-  <div class="slide">
+  <div class="slide" id="every-vector-starts-as-random-noise" role="region" aria-label="Every vector starts as random noise." tabindex="-1" inert>
     <div class="kicker">Where the numbers start</div>
     <h2>Every vector starts as <span class="accent">random noise.</span></h2>
     <div class="id-row" style="margin-top: 1.5rem;">
@@ -723,7 +735,7 @@
   </div>
 
   <!-- 20 · SELF-SUPERVISED LABELING (+ "label" clarified) -->
-  <div class="slide">
+  <div class="slide" id="the-answer-is-already-sitting-in-the-sentence" role="region" aria-label="The answer is already sitting in the sentence." tabindex="-1" inert>
     <div class="kicker">Where the "correct answer" comes from</div>
     <h2>The answer is already sitting <span class="accent">in the sentence.</span></h2>
     <div class="attn-demo">
@@ -741,7 +753,7 @@
   </div>
 
   <!-- 21 · THE GUESSING GAME (restored) -->
-  <div class="slide">
+  <div class="slide" id="guess-the-missing-word-billions-of-times" role="region" aria-label="Guess the missing word. Billions of times." tabindex="-1" inert>
     <div class="kicker">The actual training task</div>
     <h2>Guess the missing word. <span class="accent">Billions of times.</span></h2>
     <p style="margin-top: 1.25rem; max-width: 680px; font-size: 1.3rem; font-weight: 700; color: var(--fg);">"The ___ raised his sword."</p>
@@ -749,7 +761,7 @@
   </div>
 
   <!-- 22 · SCORING A GUESS -->
-  <div class="slide">
+  <div class="slide" id="the-model-scores-every-candidate-word" role="region" aria-label="The model scores every candidate word." tabindex="-1" inert>
     <div class="kicker">What one round of the game looks like, in numbers</div>
     <h2>The model scores every <span class="accent">candidate word.</span></h2>
     <p style="margin-top: 0.75rem; max-width: 680px;">Score = dot product between king's vector and a candidate's vector, turned into probabilities that sum to 1. (Real training checks the true word against a handful of random candidates, not just these two — simplified here to keep the arithmetic visible.)</p>
@@ -761,7 +773,7 @@
   </div>
 
   <!-- 23 · COMPARE AND NUDGE -->
-  <div class="slide">
+  <div class="slide" id="compare-to-reality-adjust-the-vectors" role="region" aria-label="Compare to reality. Adjust the vectors." tabindex="-1" inert>
     <div class="kicker">Turning the gap into a nudge</div>
     <h2>Compare to reality. <span class="accent">Adjust the vectors.</span></h2>
     <div class="train-steps">
@@ -777,20 +789,20 @@
   </div>
 
   <!-- 24 · AHA LINE (+ modern note folded in) -->
-  <div class="slide center">
+  <div class="slide center" id="nobody-designs-the-300-dimensions" role="region" aria-label="Nobody designs the 300 dimensions." tabindex="-1" inert>
     <div class="kicker">Now this actually lands</div>
     <h1 style="max-width: 760px; margin: 0 auto;">Nobody designs the <span class="accent">300 dimensions.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">They emerge from millions of these tiny nudges. Modern AI (GPT-style transformers) doesn't run this exact game anymore, but the core idea is unchanged: meaning is a position, learned from context.</p>
   </div>
 
   <!-- DIVIDER · WHY IT MATTERS -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="why-it-matters" role="region" aria-label="Why It Matters" tabindex="-1" inert>
     <h2>Why It Matters</h2>
     <div class="sub">The same trick runs the world</div>
   </div>
 
   <!-- 26 · REAL WORLD APPS -->
-  <div class="slide">
+  <div class="slide" id="search-recommendations-translation-rag" role="region" aria-label="Search. Recommendations. Translation. RAG." tabindex="-1" inert>
     <div class="kicker">Same trick, everywhere</div>
     <h2>Search. Recommendations.<br><span class="accent">Translation. RAG.</span></h2>
     <ul class="workflow-list">
@@ -802,14 +814,14 @@
   </div>
 
   <!-- 27 · CLOSING -->
-  <div class="slide center">
+  <div class="slide center" id="paris-tokyo-banana-now-you-know-why" role="region" aria-label="Paris. Tokyo. Banana. Now you know why." tabindex="-1" inert>
     <div class="kicker">Back to where we started</div>
     <h1>Paris. Tokyo. Banana.<br>Now you know <span class="accent">why.</span></h1>
     <p style="margin-top: 2rem; max-width: 640px;">Underneath every chatbot, search engine, and recommendation feed is the same idea we did with cartoon characters at the start: put similar things near each other, and let distance and direction do the reasoning.</p>
   </div>
 
   <!-- 28 · THANK YOU / Q&A -->
-  <div class="slide center">
+  <div class="slide center" id="thank-you" role="region" aria-label="Thank you." tabindex="-1" inert>
     <div class="kicker">Questions?</div>
     <h1>Thank you.</h1>
     <p style="margin-top: 2rem; max-width: 600px;">"You shall know a word — or a song, or a listing, or an image — by the company it keeps."</p>
@@ -834,12 +846,14 @@
     slides[cur].classList.remove('active');
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
     counter.textContent = `${cur + 1} / ${slides.length}`;
     progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
   }
   document.getElementById('next').onclick = () => show(cur + 1);
   document.getElementById('prev').onclick  = () => show(cur - 1);
   document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft') show(cur - 1);
     if (e.key === 'Home') show(0);

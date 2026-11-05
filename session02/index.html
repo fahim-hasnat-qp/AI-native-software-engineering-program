@@ -259,20 +259,32 @@
     .slide.active .vs-grid { animation: riseIn 0.55s ease 0.15s both; }
   }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 02</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session01/index.html" aria-label="Previous session: 01">Previous session</a>
+    <a href="../session03/index.html" aria-label="Next session: 03">Next session</a>
+  </nav>
+</header>
 
-<div class="slides">
+<div class="slides" id="lesson" role="main" aria-label="Session 02 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide title-slide active">
+  <div class="slide title-slide active" id="repeatable-ai-workflows-for-engineers" role="region" aria-label="Repeatable AI Workflows for Engineers" tabindex="-1">
     <div class="kicker">Claude Code · AI-Powered Development · Session</div>
     <h1>Repeatable<br>AI Workflows<br><span class="accent">for Engineers</span></h1>
     <p style="margin-top: 2rem; max-width: 640px;">Slash commands, skills, and hooks — the three primitives that turn one-off prompts into production-grade repeatable workflows.</p>
   </div>
 
   <!-- 02 · THE PROBLEM -->
-  <div class="slide center">
+  <div class="slide center" id="every-engineer-prompts-differently" role="region" aria-label="Every engineer prompts differently." tabindex="-1" inert>
     <div class="kicker">The problem</div>
     <h1>Every engineer<br>prompts <span class="accent">differently.</span></h1>
     <p style="margin-top: 2rem; max-width: 600px;">Same codebase. Different words. Different quality. Different output — every single time.</p>
@@ -280,14 +292,14 @@
   </div>
 
   <!-- 03 · THESIS -->
-  <div class="slide center">
+  <div class="slide center" id="encode-the-workflow-not-the-prompt" role="region" aria-label="Encode the workflow. Not the prompt." tabindex="-1" inert>
     <div class="kicker">The fix</div>
     <h1>Encode the workflow.<br><span class="accent">Not the prompt.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">Check it into Git. Share it with the team. Run it the same way, every time, by anyone.</p>
   </div>
 
   <!-- 04 · THREE PRIMITIVES -->
-  <div class="slide">
+  <div class="slide" id="commands-skills-hooks" role="region" aria-label="Commands. Skills. Hooks." tabindex="-1" inert>
     <div class="kicker">Three primitives</div>
     <h2>Commands. Skills.<br><span class="accent">Hooks.</span></h2>
     <div class="steps-list" style="max-width: 100%">
@@ -316,7 +328,7 @@
   </div>
 
   <!-- 05 · REPO LAYOUT -->
-  <div class="slide">
+  <div class="slide" id="one-folder-git-tracked" role="region" aria-label="One folder. Git-tracked." tabindex="-1" inert>
     <div class="kicker">Where things live</div>
     <h2>One folder.<br><span class="accent">Git-tracked.</span></h2>
     <div class="tree">
@@ -338,13 +350,13 @@
   </div>
 
   <!-- DIVIDER · FIVE WORKFLOWS -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="five-repeatable-workflows" role="region" aria-label="Five Repeatable Workflows" tabindex="-1" inert>
     <h2>Five Repeatable Workflows</h2>
     <div class="sub">Debug · Refactor · Test · Docs · Review</div>
   </div>
 
   <!-- 06 · DEBUG -->
-  <div class="slide">
+  <div class="slide" id="root-cause-it-fix-it-verify-it" role="region" aria-label="Root cause it. Fix it. Verify it." tabindex="-1" inert>
     <div class="kicker">Workflow 1 · /debug</div>
     <h2>Root cause it.<br>Fix it. Verify <span class="accent">it.</span></h2>
     <div class="chat-block">
@@ -368,7 +380,7 @@
   </div>
 
   <!-- 07 · DEBUG COMMAND ANATOMY -->
-  <div class="slide">
+  <div class="slide" id="slide-8" role="region" aria-label="Slide 8" tabindex="-1" inert>
     <div class="kicker">Workflow 1 · debug.md anatomy</div>
     <h3>What the command file <span class="accent">contains</span></h3>
     <div class="cmd-block">
@@ -400,7 +412,7 @@
   </div>
 
   <!-- 08 · REFACTOR -->
-  <div class="slide">
+  <div class="slide" id="plan-first-then-act" role="region" aria-label="Plan first. Then act." tabindex="-1" inert>
     <div class="kicker">Workflow 2 · /refactor</div>
     <h2>Plan first.<br><span class="accent">Then act.</span></h2>
     <div class="chat-block">
@@ -425,7 +437,7 @@
   </div>
 
   <!-- 09 · TEST -->
-  <div class="slide">
+  <div class="slide" id="generate-run-cover" role="region" aria-label="Generate. Run. Cover." tabindex="-1" inert>
     <div class="kicker">Workflow 3 · /test</div>
     <h2>Generate. Run.<br><span class="accent">Cover.</span></h2>
     <div class="chat-block">
@@ -446,7 +458,7 @@
   </div>
 
   <!-- 10 · DOCS -->
-  <div class="slide">
+  <div class="slide" id="tsdoc-swagger-zero-rework" role="region" aria-label="TSDoc + Swagger. Zero rework." tabindex="-1" inert>
     <div class="kicker">Workflow 4 · /docs</div>
     <h2>TSDoc + Swagger.<br><span class="accent">Zero rework.</span></h2>
     <div class="chat-block">
@@ -470,7 +482,7 @@
   </div>
 
   <!-- 11 · REVIEW -->
-  <div class="slide">
+  <div class="slide" id="catch-it-before-the-pr" role="region" aria-label="Catch it before the PR." tabindex="-1" inert>
     <div class="kicker">Workflow 5 · /review</div>
     <h2>Catch it<br><span class="accent">before the PR.</span></h2>
     <div class="chat-block">
@@ -490,13 +502,13 @@
   </div>
 
   <!-- DIVIDER · HOOKS -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="hooks-the-enforcement-layer" role="region" aria-label="Hooks — The Enforcement Layer" tabindex="-1" inert>
     <h2>Hooks — The Enforcement Layer</h2>
     <div class="sub">Rules the model cannot bypass</div>
   </div>
 
   <!-- 12 · HOOKS EXPLAINER -->
-  <div class="slide">
+  <div class="slide" id="deterministic-every-time" role="region" aria-label="Deterministic. Every time." tabindex="-1" inert>
     <div class="kicker">Hooks · settings.json</div>
     <h2>Deterministic.<br><span class="accent">Every time.</span></h2>
     <div class="hook-block">
@@ -521,13 +533,13 @@
   </div>
 
   <!-- DIVIDER · COMMAND VS SKILL -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="command-vs-skill" role="region" aria-label="Command vs. Skill" tabindex="-1" inert>
     <h2>Command vs. Skill</h2>
     <div class="sub">When to use which</div>
   </div>
 
   <!-- 13 · THE DIFFERENCE -->
-  <div class="slide">
+  <div class="slide" id="verb-vs-handbook" role="region" aria-label="Verb vs. Handbook." tabindex="-1" inert>
     <div class="kicker">The mental model</div>
     <h2>Verb vs.<br><span class="accent">Handbook.</span></h2>
     <div class="vs-grid">
@@ -551,7 +563,7 @@
   </div>
 
   <!-- 14 · DECISION TABLE -->
-  <div class="slide">
+  <div class="slide" id="slide-17" role="region" aria-label="Slide 17" tabindex="-1" inert>
     <div class="kicker">Which one? · Decision guide</div>
     <h3>Ask: is it a <span class="accent">verb</span> or a <span class="accent">rule?</span></h3>
     <table class="dtable" style="margin-top: 1.5rem;">
@@ -574,7 +586,7 @@
   </div>
 
   <!-- 15 · THE AI-NATIVE PIPELINE -->
-  <div class="slide">
+  <div class="slide" id="ai-at-every-stage-not-just-code" role="region" aria-label="AI at every stage. Not just code." tabindex="-1" inert>
     <div class="kicker">The bigger picture</div>
     <h2>AI at every<br><span class="accent">stage.</span> Not just code.</h2>
     <div class="pipeline">
@@ -595,7 +607,7 @@
   </div>
 
   <!-- 16 · SUMMARY -->
-  <div class="slide">
+  <div class="slide" id="five-commands-one-pattern" role="region" aria-label="Five commands. One pattern." tabindex="-1" inert>
     <div class="kicker">Summary</div>
     <h2>Five commands.<br><span class="accent">One pattern.</span></h2>
     <div class="sum-grid">
@@ -629,7 +641,7 @@
   </div>
 
   <!-- 17 · CLOSE -->
-  <div class="slide center">
+  <div class="slide center" id="add-one-see-the-difference" role="region" aria-label="Add one. See the difference." tabindex="-1" inert>
     <div class="kicker">Next steps</div>
     <h1>Add one.<br><span class="accent">See the difference.</span></h1>
     <p style="margin-top: 2rem; max-width: 580px;">Start with <code style="font-size: 1.25rem;">/review</code> — run it before your next PR. One command. One quality gate. Five minutes of setup.</p>
@@ -657,6 +669,7 @@
     slides[cur].classList.remove('active');
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
     counter.textContent = `${cur + 1} / ${slides.length}`;
     progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
   }
@@ -664,6 +677,7 @@
   document.getElementById('next').onclick = () => show(cur + 1);
   document.getElementById('prev').onclick  = () => show(cur - 1);
   document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft')  show(cur - 1);
     if (e.key === 'Home')       show(0);

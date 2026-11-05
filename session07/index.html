@@ -501,13 +501,25 @@
 
   .branch-row { display: flex; justify-content: center; gap: 2rem; margin: 0.4rem 0; }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 07</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session06/index.html" aria-label="Previous session: 06">Previous session</a>
+    <a href="../session08/index.html" aria-label="Next session: 08">Next session</a>
+  </nav>
+</header>
 
-<div class="slides">
+<div class="slides" id="lesson" role="main" aria-label="Session 07 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide title-slide active">
+  <div class="slide title-slide active" id="vector-databases-hands-on" role="region" aria-label="Vector Databases, Hands-On." tabindex="-1">
     <div class="kicker">Session 7 &middot; 45 Minutes &middot; Live Demo</div>
     <h1>Vector Databases,<br><span class="accent">Hands-On.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">How to actually store, index, and search millions of embeddings — with real, running code.</p>
@@ -518,7 +530,7 @@
   </div>
 
   <!-- 02 · AGENDA -->
-  <div class="slide">
+  <div class="slide" id="six-stops-one-live-demo" role="region" aria-label="Six stops, one live demo." tabindex="-1" inert>
     <div class="kicker">What we'll cover</div>
     <h2>Six stops, <span class="accent">one live demo.</span></h2>
     <ul class="agenda">
@@ -532,7 +544,7 @@
   </div>
 
   <!-- 03 · VECTOR RECAP -->
-  <div class="slide">
+  <div class="slide" id="document-embedding-numbers" role="region" aria-label="Document → Embedding → Numbers." tabindex="-1" inert>
     <div class="kicker">Quick refresher, not a re-teach</div>
     <h2>Document &rarr; Embedding &rarr; <span class="accent">Numbers.</span></h2>
     <div class="stack-flow">
@@ -546,7 +558,7 @@
   </div>
 
   <!-- 04 · THE PROBLEM -->
-  <div class="slide">
+  <div class="slide" id="10-million-vectors-find-the-10-most-similar" role="region" aria-label="10 million vectors. Find the 10 most similar." tabindex="-1" inert>
     <div class="kicker">The problem</div>
     <h2>10 million vectors.<br>Find the <span class="accent">10 most similar.</span></h2>
     <div class="stack-flow">
@@ -562,7 +574,7 @@
   </div>
 
   <!-- 05 · DEFINITION -->
-  <div class="slide">
+  <div class="slide" id="optimized-to-store-index-and-retrieve-high-dimensional-vectors-based-on-similari" role="region" aria-label="Optimized to store, index, and retrieve high-dimensional vectors based on similarity." tabindex="-1" inert>
     <div class="kicker">What is a vector database?</div>
     <h2 style="max-width: 760px;">Optimized to store, index, and retrieve <span class="accent">high-dimensional vectors</span> based on similarity.</h2>
     <div class="tools-row" style="margin-top: 2.25rem;">
@@ -577,7 +589,7 @@
   </div>
 
   <!-- 06 · COMPARISON TABLE -->
-  <div class="slide">
+  <div class="slide" id="sql-thinks-in-matches-vector-dbs-think-in-neighbors" role="region" aria-label="SQL thinks in matches. Vector DBs think in neighbors." tabindex="-1" inert>
     <div class="kicker">A different retrieval pattern</div>
     <h2>SQL thinks in matches.<br>Vector DBs think in <span class="accent">neighbors.</span></h2>
     <table class="simple-table">
@@ -590,20 +602,20 @@
   </div>
 
   <!-- 07 · HONESTY BEAT -->
-  <div class="slide center">
+  <div class="slide center" id="not-a-magic-database-that-replaces-postgres" role="region" aria-label="Not a magic database that replaces Postgres." tabindex="-1" inert>
     <div class="kicker">Worth saying plainly</div>
     <h1 style="max-width: 760px; margin: 0 auto;">Not a magic database that replaces <span class="accent">Postgres.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">It's optimized for a different retrieval pattern — "what's similar to this" instead of "what exactly matches this."</p>
   </div>
 
   <!-- DIVIDER · INDEXES & ANN -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="vector-indexes-ann" role="region" aria-label="Vector Indexes &amp; ANN" tabindex="-1" inert>
     <h2>Vector Indexes & ANN</h2>
     <div class="sub">How do you search without checking everything?</div>
   </div>
 
   <!-- 09 · BRUTE FORCE DIAGRAM -->
-  <div class="slide">
+  <div class="slide" id="compare-against-everything" role="region" aria-label="Compare against everything." tabindex="-1" inert>
     <div class="kicker">Where we left off</div>
     <h2>Compare against <span class="accent">everything.</span></h2>
     <div class="flow" style="margin-top: 2rem;">
@@ -632,14 +644,14 @@
   </div>
 
   <!-- 10 · ANN INTRO -->
-  <div class="slide center">
+  <div class="slide center" id="approximate-nearest-neighbor-the-important-word-is-approximate" role="region" aria-label="Approximate Nearest Neighbor. The important word is approximate." tabindex="-1" inert>
     <div class="kicker">The answer: get approximate</div>
     <h1 style="max-width: 760px; margin: 0 auto;">Approximate Nearest Neighbor. The important word is <span class="accent">approximate.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">You're trading 100% exactness for much faster search — the same trade from a slide ago, now with a name.</p>
   </div>
 
   <!-- 10b · RECALL VS LATENCY (moved here — this is the definition of "approximate", not an HNSW-specific fact) -->
-  <div class="slide">
+  <div class="slide" id="more-aggressive-search-higher-recall-higher-latency" role="region" aria-label="More aggressive search → higher recall, higher latency." tabindex="-1" inert>
     <div class="kicker">The knob you'll actually turn in production</div>
     <h2>More aggressive search &rarr;<br><span class="accent">higher recall, higher latency.</span></h2>
     <div class="stack-flow">
@@ -655,7 +667,7 @@
   </div>
 
   <!-- 11 · THREE FAMILIES -->
-  <div class="slide">
+  <div class="slide" id="hnsw-ivf-pq-today-just-hnsw" role="region" aria-label="HNSW, IVF, PQ — today, just HNSW." tabindex="-1" inert>
     <div class="kicker">Three tools, one deep dive</div>
     <h2>HNSW, IVF, PQ —<br>today, just <span class="accent">HNSW.</span></h2>
     <div class="id-row" style="margin-top: 1.75rem;">
@@ -667,7 +679,7 @@
   </div>
 
   <!-- 12 · HNSW — THE SIMPLE VERSION FIRST -->
-  <div class="slide">
+  <div class="slide" id="you-don-t-fly-dhaka-to-denver-directly" role="region" aria-label="You don't fly Dhaka to Denver directly." tabindex="-1" inert>
     <div class="kicker">HNSW, the simple version first</div>
     <h2>You don't fly <span class="accent">Dhaka to Denver</span> directly.</h2>
     <p style="margin-top: 1rem; max-width: 680px;">There's no direct flight — there never has been. The actual fastest real route is a single big jump through one major hub, then a precise final leg.</p>
@@ -682,7 +694,7 @@
   </div>
 
   <!-- 12b · HNSW LAYER DIAGRAM (simplified — maps directly onto the analogy above) -->
-  <div class="slide">
+  <div class="slide" id="a-few-hub-points-everyone-else-local" role="region" aria-label="A few &quot;hub&quot; points. Everyone else, local." tabindex="-1" inert>
     <div class="kicker">Same idea, as a graph</div>
     <h2>A few <span class="accent">"hub" points.</span> Everyone else, local.</h2>
     <svg viewBox="0 0 900 340" style="width: 100%; max-width: 820px; margin-top: 1.25rem;" xmlns="http://www.w3.org/2000/svg">
@@ -716,7 +728,7 @@
 
 
   <!-- 13 · HNSW SEARCH FLOW -->
-  <div class="slide">
+  <div class="slide" id="start-sparse-narrow-fast" role="region" aria-label="Start sparse. Narrow fast." tabindex="-1" inert>
     <div class="kicker">How a search moves through it</div>
     <h2>Start sparse. <span class="accent">Narrow fast.</span></h2>
     <div class="train-steps">
@@ -734,7 +746,7 @@
   </div>
 
   <!-- 13b · HNSW vs B-TREE -->
-  <div class="slide">
+  <div class="slide" id="doesn-t-this-sound-like-a-b-tree" role="region" aria-label="Doesn't this sound like a B-Tree?" tabindex="-1" inert>
     <div class="kicker">A question worth asking</div>
     <h2>Doesn't this sound like a <span class="accent">B-Tree?</span></h2>
     <div class="col-grid">
@@ -763,13 +775,13 @@
   </div>
 
   <!-- DIVIDER · THE LANDSCAPE -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="the-landscape" role="region" aria-label="The Landscape" tabindex="-1" inert>
     <h2>The Landscape</h2>
     <div class="sub">The tools people actually use</div>
   </div>
 
   <!-- 16 · LANDSCAPE -->
-  <div class="slide">
+  <div class="slide" id="dedicated-bolted-on-or-embedded" role="region" aria-label="Dedicated, bolted-on, or embedded." tabindex="-1" inert>
     <div class="kicker">Three categories</div>
     <h2>Dedicated, bolted-on, <span class="accent">or embedded.</span></h2>
     <div class="col-grid">
@@ -789,20 +801,20 @@
   </div>
 
   <!-- 17 · CHROMA CHOICE -->
-  <div class="slide center">
+  <div class="slide center" id="for-this-demo-chroma" role="region" aria-label="For this demo: Chroma." tabindex="-1" inert>
     <div class="kicker">Today's deliberate pick</div>
     <h1>For this demo: <span class="accent">Chroma.</span></h1>
     <p style="margin-top: 2rem; max-width: 600px;">Lightweight and simple — not "the" vector database, just today's tool. It can run fully in-process, but tonight it's running as a small local server, since that's what lets us talk to it from JavaScript.</p>
   </div>
 
   <!-- DIVIDER · LIVE DEMO -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="live-demo" role="region" aria-label="Live Demo" tabindex="-1" inert>
     <h2>Live Demo</h2>
     <div class="sub">Building real semantic search, live</div>
   </div>
 
   <!-- 19 · DEMO STEP 1 -->
-  <div class="slide">
+  <div class="slide" id="client-collection-documents-embeddings" role="region" aria-label="Client → Collection → Documents + embeddings." tabindex="-1" inert>
     <div class="kicker">Step 1 — Client & Collection</div>
     <h2>Client &rarr; Collection &rarr; <span class="accent">Documents + embeddings.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">import</span> { ChromaClient } <span class="tok-kw">from</span> <span class="tok-str">"chromadb"</span>;
@@ -816,7 +828,7 @@
   </div>
 
   <!-- 20 · DEMO STEP 2 -->
-  <div class="slide">
+  <div class="slide" id="engineering-docs-with-metadata" role="region" aria-label="Engineering docs, with metadata." tabindex="-1" inert>
     <div class="kicker">Step 2 — Add real documents</div>
     <h2>Engineering docs, with <span class="accent">metadata.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">await</span> collection.<span class="tok-fn">add</span>({
@@ -837,7 +849,7 @@
   </div>
 
   <!-- 21 · DEMO STEP 3 + REVEAL -->
-  <div class="slide">
+  <div class="slide" id="how-can-i-improve-database-connection-performance" role="region" aria-label="&quot;How can I improve database connection performance?&quot;" tabindex="-1" inert>
     <div class="kicker">Step 3 — Query without saying the answer</div>
     <h2>"How can I improve database<br>connection <span class="accent">performance?"</span></h2>
     <div class="code-block"><pre><span class="tok-kw">const</span> results = <span class="tok-kw">await</span> collection.<span class="tok-fn">query</span>({
@@ -848,7 +860,7 @@
   </div>
 
   <!-- 22 · REVEAL PIPELINE -->
-  <div class="slide">
+  <div class="slide" id="semantic-similarity-not-keyword-matching" role="region" aria-label="Semantic similarity, not keyword matching." tabindex="-1" inert>
     <div class="kicker">Why that worked</div>
     <h2>Semantic similarity, <span class="accent">not keyword matching.</span></h2>
     <div class="stack-flow">
@@ -865,7 +877,7 @@
   </div>
 
   <!-- 23 · METADATA FILTERING -->
-  <div class="slide">
+  <div class="slide" id="similarity-and-exact-filters-combined" role="region" aria-label="Similarity and exact filters, combined." tabindex="-1" inert>
     <div class="kicker">Step 4 — Add a filter</div>
     <h2>Similarity <em>and</em> exact filters, <span class="accent">combined.</span></h2>
     <div class="code-block"><pre><span class="tok-kw">const</span> results = <span class="tok-kw">await</span> collection.<span class="tok-fn">query</span>({
@@ -886,13 +898,13 @@
   </div>
 
   <!-- DIVIDER · RAG -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="rag" role="region" aria-label="RAG" tabindex="-1" inert>
     <h2>RAG</h2>
     <div class="sub">Where this fits into the bigger picture</div>
   </div>
 
   <!-- 25 · RAG DIAGRAM -->
-  <div class="slide">
+  <div class="slide" id="vector-db-meets-llm" role="region" aria-label="Vector DB meets LLM." tabindex="-1" inert>
     <div class="kicker">Connecting the dots</div>
     <h2>Vector DB meets <span class="accent">LLM.</span></h2>
     <div class="stack-flow">
@@ -911,14 +923,14 @@
   </div>
 
   <!-- 26 · CLOSING LINE -->
-  <div class="slide center">
+  <div class="slide center" id="the-vector-database-isn-t-the-ai-it-s-the-retrieval-layer" role="region" aria-label="The vector database isn't the AI. It's the retrieval layer." tabindex="-1" inert>
     <div class="kicker">The line to remember</div>
     <h1 style="max-width: 760px; margin: 0 auto;">The vector database isn't the AI.<br>It's the <span class="accent">retrieval layer.</span></h1>
     <p style="margin-top: 2rem; max-width: 560px;">It's what helps the AI find relevant knowledge.</p>
   </div>
 
   <!-- 27 · THANK YOU / Q&A -->
-  <div class="slide center">
+  <div class="slide center" id="thank-you" role="region" aria-label="Thank you." tabindex="-1" inert>
     <div class="kicker">Questions?</div>
     <h1>Thank you.</h1>
     <p style="margin-top: 2rem; max-width: 560px;">Client &rarr; Collection &rarr; Query &rarr; Top K. That's the whole shape of it.</p>
@@ -943,12 +955,14 @@
     slides[cur].classList.remove('active');
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
     counter.textContent = `${cur + 1} / ${slides.length}`;
     progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
   }
   document.getElementById('next').onclick = () => show(cur + 1);
   document.getElementById('prev').onclick  = () => show(cur - 1);
   document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft') show(cur - 1);
     if (e.key === 'Home') show(0);

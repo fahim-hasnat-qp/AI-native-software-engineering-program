@@ -428,20 +428,31 @@
     .slide.active .eng-row:nth-child(2) { animation-delay: 0.42s; }
   }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 01</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session02/index.html" aria-label="Next session: 02">Next session</a>
+  </nav>
+</header>
 
-<div class="slides">
+<div class="slides" id="lesson" role="main" aria-label="Session 01 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide title-slide active">
+  <div class="slide title-slide active" id="the-future-of-software-engineering-in-the-ai-era" role="region" aria-label="The Future of Software Engineering in the AI Era" tabindex="-1">
     <div class="kicker">AI-Native Software Engineer Program · Session 01</div>
     <h1>The Future of<br>Software Engineering<br><span class="accent">in the AI Era</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">How LLMs work. What agents are. Why the gap between casual use and deep use is enormous.</p>
   </div>
 
   <!-- 02 · SPEAKERS -->
-  <div class="slide center">
+  <div class="slide center" id="slide-2" role="region" aria-label="Slide 2" tabindex="-1" inert>
     <div class="kicker">Your hosts</div>
     <div class="speakers-row">
       <div class="speaker">
@@ -458,7 +469,7 @@
   </div>
 
   <!-- 03 · THE "BUT" SLIDE -->
-  <div class="slide">
+  <div class="slide" id="you-ve-tried-it-it-was-fine" role="region" aria-label="You've tried it. It was fine." tabindex="-1" inert>
     <div class="kicker">Let's be honest</div>
     <h2>You've tried it.<br>It was <span class="accent">fine.</span></h2>
     <p style="margin-top: 2rem; max-width: 620px;">You've pasted an error into ChatGPT. You've used Copilot autocomplete. It helped sometimes. It hallucinated sometimes. You moved on.</p>
@@ -466,13 +477,13 @@
   </div>
 
   <!-- 04 · THESIS -->
-  <div class="slide center">
+  <div class="slide center" id="the-engineers-who-understand-this-will-outpace-those-who-don-t" role="region" aria-label="The engineers who understand this will outpace those who don't." tabindex="-1" inert>
     <h1 style="max-width: 820px; margin: 0 auto;">The engineers who <span class="accent">understand</span> this will outpace those who don't.</h1>
     <p style="margin-top: 2rem; max-width: 600px;">Not because AI replaces them. Because they move differently.</p>
   </div>
 
   <!-- 05 · PRODUCTIVITY PARADOX -->
-  <div class="slide">
+  <div class="slide" id="coding-faster-shipping-faster" role="region" aria-label="Coding faster ≠ shipping faster." tabindex="-1" inert>
     <div class="kicker">The productivity illusion</div>
     <h2>Coding faster ≠ <span class="accent">shipping faster.</span></h2>
     <div class="paradox-wrap">
@@ -509,7 +520,7 @@
   </div>
 
   <!-- 06 · AI-NATIVE ENGINEER -->
-  <div class="slide">
+  <div class="slide" id="most-focus-only-on-code" role="region" aria-label="Most focus only on Code." tabindex="-1" inert>
     <div class="kicker">What makes an AI-native engineer</div>
     <h2>Most focus only on <span class="accent">Code.</span></h2>
     <div class="eng-flow-wrap">
@@ -582,7 +593,7 @@
   </div>
 
   <!-- 06 · ROADMAP (was 05) -->
-  <div class="slide">
+  <div class="slide" id="8-phases-36-sessions" role="region" aria-label="8 Phases. 36 Sessions." tabindex="-1" inert>
     <div class="kicker">The Program · Beta</div>
     <h2>8 Phases. <span class="accent">36 Sessions.</span></h2>
     <div class="phase-grid">
@@ -598,7 +609,7 @@
   </div>
 
   <!-- 06 · TODAY -->
-  <div class="slide">
+  <div class="slide" id="what-we-ll-cover" role="region" aria-label="What we'll cover" tabindex="-1" inert>
     <div class="kicker">Today's session</div>
     <h2>What we'll cover</h2>
     <ul class="agenda">
@@ -627,7 +638,7 @@
   </div>
 
   <!-- 07 OPEN CLI -->
-  <div class="slide">
+  <div class="slide" id="you-open-a-cli-you-type-a-message" role="region" aria-label="You open a CLI. You type a message." tabindex="-1" inert>
     <div class="kicker">The Journey Begins</div>
     <h2>You open a CLI.<br>You type <span class="accent">a message.</span></h2>
     <div class="terminal">
@@ -644,14 +655,14 @@
   </div>
 
   <!-- 08 TOKENS = CURRENCY -->
-  <div class="slide center">
+  <div class="slide center" id="tokens-are-the-currency-of-llms" role="region" aria-label="Tokens are the currency of LLMs." tabindex="-1" inert>
     <div class="kicker">Step 1 &middot; Tokenize</div>
     <h1>Tokens are the<br><span class="accent">currency</span> of LLMs.</h1>
     <p style="margin-top: 2rem; max-width: 600px;">Not words. Not characters. Subword chunks &mdash; the unit of cost, memory, and everything the model processes.</p>
   </div>
 
   <!-- 09 SPLIT -->
-  <div class="slide center">
+  <div class="slide center" id="your-text-is-split-into-chunks" role="region" aria-label="Your text is split into chunks." tabindex="-1" inert>
     <div class="kicker">Step 1 &middot; Tokenize</div>
     <h2>Your text is <span class="accent">split</span><br>into chunks.</h2>
     <div style="margin-top: 2.25rem;">
@@ -675,7 +686,7 @@
   </div>
 
   <!-- 10 ENCODE -->
-  <div class="slide center">
+  <div class="slide center" id="each-chunk-becomes-a-number" role="region" aria-label="Each chunk becomes a number." tabindex="-1" inert>
     <div class="kicker">Step 1 &middot; Tokenize</div>
     <h2>Each chunk becomes<br><span class="accent">a number.</span></h2>
     <div style="margin-top: 2rem;">
@@ -709,7 +720,7 @@
   </div>
 
   <!-- 11 VOCABULARY -->
-  <div class="slide">
+  <div class="slide" id="every-model-has-its-own-vocabulary" role="region" aria-label="Every model has its own vocabulary." tabindex="-1" inert>
     <div class="kicker">Step 1 &middot; Tokenize</div>
     <h2>Every model has its<br>own <span class="accent">vocabulary.</span></h2>
     <p style="margin-top: 2rem; max-width: 660px;">Claude, GPT-4, Gemini &mdash; same text, different token IDs. Each trained with its own dictionary. &ldquo;null&rdquo; might be token 1202 in one model and 4498 in another.</p>
@@ -718,7 +729,7 @@
   </div>
 
   <!-- 12 COMMON VS RARE -->
-  <div class="slide">
+  <div class="slide" id="common-is-cheap-rare-is-expensive" role="region" aria-label="Common is cheap. Rare is expensive." tabindex="-1" inert>
     <div class="kicker">Step 1 &middot; Tokenize</div>
     <h2>Common is <span class="accent">cheap.</span><br>Rare is expensive.</h2>
     <div class="token-compare">
@@ -742,7 +753,7 @@
   </div>
 
   <!-- 13 WHAT IS A PARAMETER -->
-  <div class="slide">
+  <div class="slide" id="what-is-a-parameter" role="region" aria-label="What is a parameter?" tabindex="-1" inert>
     <div class="kicker">Step 2 &middot; Into the LLM</div>
     <h2>What is a <span class="accent">parameter?</span></h2>
     <div class="param-grid">
@@ -767,7 +778,7 @@
   </div>
 
   <!-- 14 TRAINING -->
-  <div class="slide">
+  <div class="slide" id="it-read-the-internet-and-learned-from-every-mistake" role="region" aria-label="It read the internet. And learned from every mistake." tabindex="-1" inert>
     <div class="kicker">Step 2 &middot; Into the LLM</div>
     <h2>It read the internet.<br>And learned from<br><span class="accent">every mistake.</span></h2>
     <div class="train-steps">
@@ -785,7 +796,7 @@
   </div>
 
   <!-- 15 RLHF -->
-  <div class="slide">
+  <div class="slide" id="then-humans-rated-its-answers" role="region" aria-label="Then humans rated its answers." tabindex="-1" inert>
     <div class="kicker">Step 2 &middot; Into the LLM</div>
     <h2>Then humans<br><span class="accent">rated its answers.</span></h2>
     <div class="rlhf-steps">
@@ -814,7 +825,7 @@
   </div>
 
   <!-- 16 ATTENTION -->
-  <div class="slide">
+  <div class="slide" id="every-token-looks-at-every-other-token" role="region" aria-label="Every token looks at every other token." tabindex="-1" inert>
     <div class="kicker">Step 2 &middot; Into the LLM</div>
     <h2>Every token looks at<br><span class="accent">every other token.</span></h2>
     <div class="attn-demo">
@@ -841,14 +852,14 @@
   </div>
 
   <!-- 17 EMERGENT -->
-  <div class="slide center">
+  <div class="slide center" id="nobody-programmed-reasoning-it-appeared" role="region" aria-label="Nobody programmed reasoning. It appeared." tabindex="-1" inert>
     <div class="kicker">Step 2 &middot; Into the LLM</div>
     <h1>Nobody programmed<br><span class="accent">reasoning.</span><br>It appeared.</h1>
     <p style="margin-top: 2rem; max-width: 640px;">At scale, the model began to reason, write code, translate languages, solve maths &mdash; none explicitly trained. Emergent behaviour from one objective: predict the next token.</p>
   </div>
 
   <!-- 18 PROBABILISTIC -->
-  <div class="slide center">
+  <div class="slide center" id="the-output-is-a-probability-distribution" role="region" aria-label="The output is a probability distribution." tabindex="-1" inert>
     <div class="kicker">Step 2 &middot; Into the LLM</div>
     <h2>The output is a<br><span class="accent">probability distribution.</span></h2>
     <div class="prob-list">
@@ -873,7 +884,7 @@
   </div>
 
   <!-- 19 TOOL CALL + LOOP -->
-  <div class="slide">
+  <div class="slide" id="sometimes-the-model-needs-to-do-something" role="region" aria-label="Sometimes the model needs to do something." tabindex="-1" inert>
     <div class="kicker">Step 3 &middot; Tool Call &amp; Loop</div>
     <h2>Sometimes the model<br>needs to <span class="accent">do something.</span></h2>
     <div class="tool-loop">
@@ -902,7 +913,7 @@
   </div>
 
   <!-- 20 THINKING -->
-  <div class="slide">
+  <div class="slide" id="before-answering-it-thinks" role="region" aria-label="Before answering, it thinks." tabindex="-1" inert>
     <div class="kicker">Step 4 &middot; Thinking</div>
     <h2>Before answering,<br>it <span class="accent">thinks.</span></h2>
     <div class="thinking-block">
@@ -919,7 +930,7 @@
   </div>
 
   <!-- 21 CONTEXT -->
-  <div class="slide center">
+  <div class="slide center" id="fixed-window-everything-competes-for-space" role="region" aria-label="Fixed window. Everything competes for space." tabindex="-1" inert>
     <div class="kicker">Step 5 &middot; Context</div>
     <h1>Fixed window.<br><span class="accent">Everything</span><br>competes for space.</h1>
     <div class="ctx-bar">
@@ -930,7 +941,7 @@
   </div>
 
   <!-- 22 TOKEN DISCIPLINE -->
-  <div class="slide">
+  <div class="slide" id="every-token-in-your-prompt-is-a-token-taken-from-thinking" role="region" aria-label="Every token in your prompt is a token taken from thinking." tabindex="-1" inert>
     <div class="kicker">Step 5 &middot; Context</div>
     <h2>Every token in your prompt<br>is a token <span class="accent">taken from thinking.</span></h2>
     <p style="margin-top: 2rem; max-width: 660px;">Bloated system prompts. Full files when only 10 lines matter. Long conversation history nobody trimmed. All of it eats the window.</p>
@@ -938,7 +949,7 @@
   </div>
 
   <!-- 23 PONYTAIL/CAVEMAN -->
-  <div class="slide">
+  <div class="slide" id="engineer-the-model-s-behaviour-through-the-prompt" role="region" aria-label="Engineer the model’s behaviour through the prompt." tabindex="-1" inert>
     <div class="kicker">Step 5 &middot; Context</div>
     <h2>Engineer the model&rsquo;s<br><span class="accent">behaviour</span> through the prompt.</h2>
     <div class="harness-box">
@@ -955,7 +966,7 @@
   </div>
 
   <!-- 24 OUTPUT -->
-  <div class="slide center">
+  <div class="slide center" id="token-ids-decoded-back-to-text-one-at-a-time" role="region" aria-label="Token IDs. Decoded back to text. One at a time." tabindex="-1" inert>
     <div class="kicker">Step 6 &middot; Output</div>
     <h2>Token IDs.<br><span class="accent">Decoded</span> back to text.<br>One at a time.</h2>
     <div style="margin-top: 2rem;">
@@ -985,20 +996,20 @@
   </div>
 
   <!-- DIVIDER · HARNESS -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="what-is-an-agent-harness" role="region" aria-label="What is an Agent Harness?" tabindex="-1" inert>
     <h2>What is an Agent Harness?</h2>
     <div class="sub">The scaffolding that turns a model into a tool</div>
   </div>
 
   <!-- 24 · RAW API VS HARNESS -->
-  <div class="slide center">
+  <div class="slide center" id="a-raw-api-call-is-not-an-agent" role="region" aria-label="A raw API call is not an agent." tabindex="-1" inert>
     <div class="kicker">Agent Harness</div>
     <h1>A raw API call<br>is not an <span class="accent">agent.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">Text in, text out. One turn. No memory. No tools. No loop. A very smart autocomplete.</p>
   </div>
 
   <!-- 25 · HARNESS DIAGRAM -->
-  <div class="slide">
+  <div class="slide" id="loop-context-tools" role="region" aria-label="Loop + Context + Tools" tabindex="-1" inert>
     <div class="kicker">What a harness does</div>
     <h2>Loop + Context + <span class="accent">Tools</span></h2>
     <div class="harness-box">
@@ -1022,7 +1033,7 @@
   </div>
 
   <!-- 26 · EXAMPLES -->
-  <div class="slide">
+  <div class="slide" id="same-model-different-harness-different-output" role="region" aria-label="Same model. Different harness. Different output." tabindex="-1" inert>
     <div class="kicker">Harness quality · In the wild</div>
     <h2>Same model.<br><span class="accent">Different harness.</span><br>Different output.</h2>
     <div class="tools-row">
@@ -1036,7 +1047,7 @@
   </div>
 
   <!-- 27 · WHY IT MATTERS -->
-  <div class="slide center">
+  <div class="slide center" id="a-good-harness-changes-the-output-drastically" role="region" aria-label="A good harness changes the output drastically." tabindex="-1" inert>
     <div class="kicker">The point</div>
     <h1>A <span class="accent">good harness</span><br>changes the output<br>drastically.</h1>
     <p style="margin-top: 2rem; max-width: 620px;">Most people blame the model. The model is usually fine. The harness is the problem.</p>
@@ -1044,13 +1055,13 @@
   </div>
 
   <!-- DIVIDER · WORKFLOW -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="how-we-actually-use-it" role="region" aria-label="How We Actually Use It" tabindex="-1" inert>
     <h2>How We Actually Use It</h2>
     <div class="sub">A glimpse — not a lesson</div>
   </div>
 
   <!-- 29 · WORKFLOWS -->
-  <div class="slide">
+  <div class="slide" id="same-goal-two-different-stacks" role="region" aria-label="Same goal. Two different stacks." tabindex="-1" inert>
     <div class="kicker">Our workflows</div>
     <h2>Same goal.<br>Two different <span class="accent">stacks.</span></h2>
     <div class="stacks">
@@ -1078,7 +1089,7 @@
   </div>
 
   <!-- 30 · CLOSE -->
-  <div class="slide center">
+  <div class="slide center" id="ai-as-a-thinking-partner" role="region" aria-label="AI as a Thinking Partner." tabindex="-1" inert>
     <div class="kicker">Next session</div>
     <h1>AI as a<br><span class="accent">Thinking Partner.</span></h1>
     <p style="margin-top: 2rem; max-width: 580px;">How to actually collaborate with a model — not just prompt it and hope.</p>
@@ -1103,12 +1114,14 @@
     slides[cur].classList.remove('active');
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
     counter.textContent = `${cur + 1} / ${slides.length}`;
     progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
   }
   document.getElementById('next').onclick = () => show(cur + 1);
   document.getElementById('prev').onclick  = () => show(cur - 1);
   document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft') show(cur - 1);
     if (e.key === 'Home') show(0);

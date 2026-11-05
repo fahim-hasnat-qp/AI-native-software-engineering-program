@@ -328,12 +328,24 @@ pre {
   color: var(--fg-muted);
 }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
-<div class="slides">
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 10</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session09/index.html" aria-label="Previous session: 09">Previous session</a>
+    <a href="../session11/index.html" aria-label="Next session: 11">Next session</a>
+  </nav>
+</header>
+<div class="slides" id="lesson" role="main" aria-label="Session 10 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide center active">
+  <div class="slide center active" id="build-a-runtime-not-a-prompt" role="region" aria-label="Build a runtime, not a prompt." tabindex="-1">
     <div class="kicker">AI Agents Engineering Workshop</div>
     <h1>Build a runtime,<br>not a <span class="accent">prompt.</span></h1>
     <p style="margin-top: 1.5rem;">How Claude Code, Codex, opencode and pi actually work &mdash;
@@ -341,7 +353,7 @@ pre {
   </div>
 
   <!-- 02 · AGENDA -->
-  <div class="slide">
+  <div class="slide" id="where-we-re-going" role="region" aria-label="Where we're going" tabindex="-1" inert>
     <div class="kicker">Six sessions</div>
     <h2>Where we're going</h2>
     <ul class="agenda">
@@ -355,7 +367,7 @@ pre {
   </div>
 
   <!-- 03 · TWO TRACKS -->
-  <div class="slide">
+  <div class="slide" id="two-harnesses-in-parallel" role="region" aria-label="Two harnesses, in parallel" tabindex="-1" inert>
     <div class="kicker">What we're actually building</div>
     <h2>Two harnesses,<br>in parallel</h2>
     <div class="box">
@@ -368,7 +380,7 @@ pre {
   </div>
 
   <!-- 04 · MENTAL MODEL -->
-  <div class="slide center">
+  <div class="slide center" id="agent-llm-prompt" role="region" aria-label="Agent &amp;ne; LLM + prompt" tabindex="-1" inert>
     <div class="kicker">Mental model</div>
     <h1>Agent &ne; LLM + prompt</h1>
     <div class="quote">An agent is a runtime that lets a model operate
@@ -376,20 +388,20 @@ pre {
   </div>
 
   <!-- ============ SESSION 1 ============ -->
-  <div class="slide center">
+  <div class="slide center" id="provider-prompt-tool-calling" role="region" aria-label="Provider, prompt, tool calling" tabindex="-1" inert>
     <div class="kicker">Session 1</div>
     <h1>Provider, prompt,<br><span class="accent">tool calling</span></h1>
   </div>
 
   <!-- 06 · THE HOOK -->
-  <div class="slide center">
+  <div class="slide center" id="claude-code-has-no-vector-database" role="region" aria-label="Claude Code has no vector database." tabindex="-1" inert>
     <div class="kicker">You just learned RAG</div>
     <h1>Claude Code has no<br><span class="accent">vector database.</span></h1>
     <p style="margin-top: 1.5rem;">Neither does Codex, opencode, or pi. They grep.</p>
   </div>
 
   <!-- 07 · WHY -->
-  <div class="slide">
+  <div class="slide" id="why-grep-wins-here" role="region" aria-label="Why grep wins here" tabindex="-1" inert>
     <div class="kicker">Retrieval, two ways</div>
     <h2>Why grep wins here</h2>
     <div class="box">
@@ -401,7 +413,7 @@ pre {
   </div>
 
   <!-- 08 · PROVIDER -->
-  <div class="slide">
+  <div class="slide" id="the-provider" role="region" aria-label="The provider" tabindex="-1" inert>
     <div class="kicker">Example 01</div>
     <h2>The provider</h2>
     <pre>interface LLMProvider {
@@ -416,7 +428,7 @@ pre {
   </div>
 
   <!-- 09 · SYSTEM PROMPT -->
-  <div class="slide">
+  <div class="slide" id="the-system-prompt-is-the-product" role="region" aria-label="The system prompt is the product" tabindex="-1" inert>
     <div class="kicker">The underrated part</div>
     <h2>The system prompt<br>is the product</h2>
     <p>In a real harness it isn't a sentence, it's thousands of tokens. The
@@ -429,7 +441,7 @@ pre {
   </div>
 
   <!-- 10 · TOOL CALLING -->
-  <div class="slide">
+  <div class="slide" id="tool-calling" role="region" aria-label="Tool calling" tabindex="-1" inert>
     <div class="kicker">Example 02</div>
     <h2>Tool calling</h2>
     <pre>{
@@ -444,7 +456,7 @@ pre {
   </div>
 
   <!-- 11 · EXECUTION BOUNDARY -->
-  <div class="slide">
+  <div class="slide" id="model-requests-application-decides" role="region" aria-label="Model requests. Application decides." tabindex="-1" inert>
     <div class="kicker">The execution boundary</div>
     <h2>Model requests.<br>Application decides.</h2>
     <div class="box">
@@ -457,7 +469,7 @@ pre {
   </div>
 
   <!-- 12 · HOMEWORK 1 -->
-  <div class="slide">
+  <div class="slide" id="one-tool-call-end-to-end" role="region" aria-label="One tool call, end to end" tabindex="-1" inert>
     <div class="kicker">Homework &middot; week 1</div>
     <h2>One tool call,<br>end to end</h2>
     <pre>pnpm verify              # structure, offline and free
@@ -486,6 +498,7 @@ function show(index) {
   slides[current].classList.remove("active");
   current = (index + slides.length) % slides.length;
   slides[current].classList.add("active");
+    window.courseDeckChanged(slides, current);
   counter.textContent = `${current + 1} / ${slides.length}`;
   progress.style.width = `${((current + 1) / slides.length) * 100}%`;
 }
@@ -498,6 +511,7 @@ document
   .addEventListener("click", () => show(current - 1));
 
 document.addEventListener("keydown", (event) => {
+    if (event.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
   if (event.key === "ArrowRight" || event.key === " ") {
     event.preventDefault();
     show(current + 1);

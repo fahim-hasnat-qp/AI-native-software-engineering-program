@@ -253,20 +253,32 @@
     .slide.active .prompt-card:nth-child(2){animation-delay:.26s}
   }
   </style>
+  <link rel="stylesheet" href="../assets/course.css" />
+  <script src="../assets/course.js"></script>
 </head>
-<body>
+<body class="course-deck">
+<a class="course-skip" href="#lesson">Skip to lesson</a>
+<header class="course-header">
+  <a class="course-wordmark" href="../index.html"><img src="../assets/questionpro-logo.svg" alt="QuestionPro" width="166" height="32" /></a>
+  <span class="course-current">Session 03</span>
+  <nav aria-label="Course">
+    <a href="../index.html">All sessions</a>
+    <a href="../session02/index.html" aria-label="Previous session: 02">Previous session</a>
+    <a href="../session04/index.html" aria-label="Next session: 04">Next session</a>
+  </nav>
+</header>
 
-<div class="slides">
+<div class="slides" id="lesson" role="main" aria-label="Session 03 slides" tabindex="-1">
 
   <!-- 01 · TITLE -->
-  <div class="slide title-slide active">
+  <div class="slide title-slide active" id="learn-faster-retain-more-use-ai-right" role="region" aria-label="Learn Faster. Retain More. Use AI Right." tabindex="-1">
     <div class="kicker">AI-Powered Learning · Interactive Session · 45 min</div>
     <h1>Learn Faster.<br>Retain More.<br><span class="accent">Use AI Right.</span></h1>
     <p style="margin-top: 2rem; max-width: 640px;">Six techniques to accelerate skill acquisition with Claude — every one demonstrated live with a copy-ready prompt.</p>
   </div>
 
   <!-- 02 · THE PROBLEM -->
-  <div class="slide center">
+  <div class="slide center" id="ai-answers-fast-you-learn-nothing" role="region" aria-label="AI answers fast. You learn nothing." tabindex="-1" inert>
     <div class="kicker">The problem</div>
     <h1>AI answers fast.<br>You learn <span class="accent">nothing.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">Ask → copy → paste → ship → forget. Same question again next month.</p>
@@ -274,14 +286,14 @@
   </div>
 
   <!-- 03 · THESIS -->
-  <div class="slide center">
+  <div class="slide center" id="attempt-first-ai-second" role="region" aria-label="Attempt first. AI second." tabindex="-1" inert>
     <div class="kicker">The fix</div>
     <h1>Attempt first.<br><span class="accent">AI second.</span></h1>
     <p style="margin-top: 2rem; max-width: 640px;">Never let AI do the thinking. Make it <em>coach</em> the thinking — hints, feedback, and questions instead of answers.</p>
   </div>
 
   <!-- 04 · ROADMAP -->
-  <div class="slide">
+  <div class="slide" id="six-techniques-twelve-live-prompts" role="region" aria-label="Six techniques. Twelve live prompts." tabindex="-1" inert>
     <div class="kicker">Today's route</div>
     <h2>Six techniques.<br><span class="accent">Twelve live prompts.</span></h2>
     <div class="steps-list" style="max-width: 100%;">
@@ -313,13 +325,13 @@
   </div>
 
   <!-- DIVIDER · SECTION 1 -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="01-learning-faster-with-ai" role="region" aria-label="01 · Learning Faster with AI" tabindex="-1" inert>
     <h2>01 · Learning Faster with AI</h2>
     <div class="sub">Answers make you faster today. Loops make you faster forever.</div>
   </div>
 
   <!-- 06 · S1 CONCEPT -->
-  <div class="slide">
+  <div class="slide" id="answer-machine-vs-tutor" role="region" aria-label="Answer machine vs. tutor." tabindex="-1" inert>
     <div class="kicker">01 · The mental model</div>
     <h2>Answer machine vs.<br><span class="accent">tutor.</span></h2>
     <div class="vs-grid">
@@ -343,7 +355,7 @@
   </div>
 
   <!-- 07 · S1 PROMPTS -->
-  <div class="slide">
+  <div class="slide" id="slide-7" role="region" aria-label="Slide 7" tabindex="-1" inert>
     <div class="kicker">01 · Live demo · Two prompts</div>
     <h3>Flip AI from answer machine to <span class="accent">tutor</span></h3>
     <div class="prompt-grid">
@@ -383,13 +395,13 @@ Stop after Layer 1 and wait for me to say "next".</div>
   </div>
 
   <!-- DIVIDER · SECTION 2 -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="02-using-ai-to-learn-dsa" role="region" aria-label="02 · Using AI to Learn DSA" tabindex="-1" inert>
     <h2>02 · Using AI to Learn DSA</h2>
     <div class="sub">The solution is the least valuable part of a problem</div>
   </div>
 
   <!-- 09 · S2 CONCEPT -->
-  <div class="slide">
+  <div class="slide" id="ration-the-hints-preserve-the-struggle" role="region" aria-label="Ration the hints. Preserve the struggle." tabindex="-1" inert>
     <div class="kicker">02 · The mental model</div>
     <h2>Ration the hints.<br><span class="accent">Preserve the struggle.</span></h2>
     <div class="steps-list">
@@ -417,7 +429,7 @@ Stop after Layer 1 and wait for me to say "next".</div>
   </div>
 
   <!-- 10 · S2 PROMPTS -->
-  <div class="slide">
+  <div class="slide" id="slide-10" role="region" aria-label="Slide 10" tabindex="-1" inert>
     <div class="kicker">02 · Live demo · Two prompts</div>
     <h3>Struggle-preserving prompts for <span class="accent">DSA</span></h3>
     <div class="prompt-grid">
@@ -461,13 +473,13 @@ Begin.</div>
   </div>
 
   <!-- DIVIDER · SECTION 3 -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="03-using-ai-to-learn-system-design" role="region" aria-label="03 · Using AI to Learn System Design" tabindex="-1" inert>
     <h2>03 · Using AI to Learn System Design</h2>
     <div class="sub">Don't ask AI to design — make it attack your design</div>
   </div>
 
   <!-- 12 · S3 CONCEPT -->
-  <div class="slide">
+  <div class="slide" id="ai-as-a-tireless-staff-interviewer" role="region" aria-label="AI as a tireless staff interviewer." tabindex="-1" inert>
     <div class="kicker">03 · The mental model</div>
     <h2>AI as a tireless<br><span class="accent">staff interviewer.</span></h2>
     <div class="chat-block">
@@ -491,7 +503,7 @@ Begin.</div>
   </div>
 
   <!-- 13 · S3 PROMPTS -->
-  <div class="slide">
+  <div class="slide" id="slide-13" role="region" aria-label="Slide 13" tabindex="-1" inert>
     <div class="kicker">03 · Live demo · Two prompts</div>
     <h3>Adversarial prompts for <span class="accent">system design</span></h3>
     <div class="prompt-grid">
@@ -533,13 +545,13 @@ Failure mode #1 — go.</div>
   </div>
 
   <!-- DIVIDER · SECTION 4 -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="04-using-ai-to-learn-databases" role="region" aria-label="04 · Using AI to Learn Databases" tabindex="-1" inert>
     <h2>04 · Using AI to Learn Databases</h2>
     <div class="sub">Your production queries are a better textbook than any course</div>
   </div>
 
   <!-- 15 · S4 CONCEPT -->
-  <div class="slide">
+  <div class="slide" id="read-plans-like-a-dba" role="region" aria-label="Read plans like a DBA." tabindex="-1" inert>
     <div class="kicker">04 · The mental model</div>
     <h2>Read plans like<br><span class="accent">a DBA.</span></h2>
     <div class="hook-block">
@@ -553,7 +565,7 @@ Failure mode #1 — go.</div>
   </div>
 
   <!-- 16 · S4 PROMPTS -->
-  <div class="slide">
+  <div class="slide" id="slide-16" role="region" aria-label="Slide 16" tabindex="-1" inert>
     <div class="kicker">04 · Live demo · Two prompts</div>
     <h3>Learning Postgres from <span class="accent">your own workload</span></h3>
     <div class="prompt-grid">
@@ -592,13 +604,13 @@ Do NOT recommend indexes yet. Instead, interview me:
   </div>
 
   <!-- DIVIDER · SECTION 5 -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="05-using-ai-to-learn-new-technologies" role="region" aria-label="05 · Using AI to Learn New Technologies" tabindex="-1" inert>
     <h2>05 · Using AI to Learn New Technologies</h2>
     <div class="sub">You don't learn from zero — you learn by mapping</div>
   </div>
 
   <!-- 18 · S5 CONCEPT -->
-  <div class="slide">
+  <div class="slide" id="map-it-then-find-where-the-map-breaks" role="region" aria-label="Map it — then find where the map breaks." tabindex="-1" inert>
     <div class="kicker">05 · The mental model</div>
     <h2>Map it — then find where<br><span class="accent">the map breaks.</span></h2>
     <table class="dtable" style="margin-top: 1.5rem; max-width: 980px;">
@@ -620,7 +632,7 @@ Do NOT recommend indexes yet. Instead, interview me:
   </div>
 
   <!-- 19 · S5 PROMPTS -->
-  <div class="slide">
+  <div class="slide" id="slide-19" role="region" aria-label="Slide 19" tabindex="-1" inert>
     <div class="kicker">05 · Live demo · Two prompts</div>
     <h3>Prompts that ride your <span class="accent">existing knowledge</span></h3>
     <div class="prompt-grid">
@@ -662,13 +674,13 @@ Give me the milestone plan.</div>
   </div>
 
   <!-- DIVIDER · SECTION 6 -->
-  <div class="slide divider center">
+  <div class="slide divider center" id="06-building-a-continuous-learning-system" role="region" aria-label="06 · Building a Continuous Learning System" tabindex="-1" inert>
     <h2>06 · Building a Continuous Learning System</h2>
     <div class="sub">Motivation fails. Systems don't.</div>
   </div>
 
   <!-- 21 · S6 CONCEPT -->
-  <div class="slide">
+  <div class="slide" id="a-flywheel-fueled-by-work-you-already-did" role="region" aria-label="A flywheel fueled by work you already did." tabindex="-1" inert>
     <div class="kicker">06 · The mental model</div>
     <h2>A flywheel fueled by<br><span class="accent">work you already did.</span></h2>
     <div class="pipeline" style="max-width: 900px;">
@@ -693,7 +705,7 @@ Give me the milestone plan.</div>
   </div>
 
   <!-- 22 · S6 PROMPTS -->
-  <div class="slide">
+  <div class="slide" id="slide-22" role="region" aria-label="Slide 22" tabindex="-1" inert>
     <div class="kicker">06 · Live demo · Two prompts</div>
     <h3>Automating the flywheel with <span class="accent">Claude Code</span></h3>
     <div class="prompt-grid">
@@ -735,7 +747,7 @@ Be blunt. Flattery wastes my time.</div>
   </div>
 
   <!-- 23 · SUMMARY -->
-  <div class="slide">
+  <div class="slide" id="six-techniques-one-rule" role="region" aria-label="Six techniques. One rule." tabindex="-1" inert>
     <div class="kicker">Summary</div>
     <h2>Six techniques.<br><span class="accent">One rule.</span></h2>
     <div class="sum-grid">
@@ -774,7 +786,7 @@ Be blunt. Flattery wastes my time.</div>
   </div>
 
   <!-- 24 · CLOSE -->
-  <div class="slide center">
+  <div class="slide center" id="steal-one-prompt-run-it-this-week" role="region" aria-label="Steal one prompt. Run it this week." tabindex="-1" inert>
     <div class="kicker">Next steps · Homework</div>
     <h1>Steal one prompt.<br><span class="accent">Run it this week.</span></h1>
     <p style="margin-top: 2rem; max-width: 620px;">Start with the <strong>Weekly Digest</strong> — run it in Claude Code on your own repo before next Friday. Bring one surprising gap it found.</p>
@@ -802,6 +814,7 @@ Be blunt. Flattery wastes my time.</div>
     slides[cur].classList.remove('active');
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add('active');
+    window.courseDeckChanged(slides, cur);
     counter.textContent = `${cur + 1} / ${slides.length}`;
     progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
   }
@@ -809,6 +822,7 @@ Be blunt. Flattery wastes my time.</div>
   document.getElementById('next').onclick = () => show(cur + 1);
   document.getElementById('prev').onclick  = () => show(cur - 1);
   document.addEventListener('keydown', e => {
+    if (e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (e.target.classList.contains('copy-btn') && e.key === ' ') return;
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft')  show(cur - 1);
